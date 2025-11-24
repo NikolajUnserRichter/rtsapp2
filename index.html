@@ -279,8 +279,17 @@
 
         // Sanitize ID to ensure it only contains safe characters for HTML attributes
         function sanitizeId(id) {
-            // Remove any characters that are not alphanumeric, dash, or underscore
-            return String(id).replace(/[^a-zA-Z0-9\-_]/g, '');
+            // Remove any characters that are not alphanumeric (including German umlauts), dash, or underscore
+            // Allow ä, ö, ü, Ä, Ö, Ü, ß and other common European characters
+            return String(id).replace(/[^a-zA-Z0-9\-_äöüÄÖÜß]/g, '');
+        }
+
+        // UTF-8 aware base64 decoding
+        function base64DecodeUnicode(str) {
+            // Convert base64 to percent-encoding, then decode
+            return decodeURIComponent(atob(str).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
         }
 
         // Get/normalize order data from URL
@@ -291,8 +300,17 @@
                 if (!encodedData) return [];
                 let jsonString;
                 try {
-                    jsonString = atob(encodedData);
-                } catch { jsonString = decodeURIComponent(encodedData); }
+                    // Try UTF-8 aware base64 decoding first
+                    jsonString = base64DecodeUnicode(encodedData);
+                } catch { 
+                    try {
+                        // Fallback to regular base64
+                        jsonString = atob(encodedData);
+                    } catch {
+                        // Last resort: try URL decoding
+                        jsonString = decodeURIComponent(encodedData);
+                    }
+                }
                 const parsedData = JSON.parse(jsonString);
                 const ordersArray = Array.isArray(parsedData) ? parsedData : [parsedData];
                 return ordersArray.map(order => {
