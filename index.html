@@ -369,9 +369,14 @@
             ordersData.forEach(order => {
                 container.innerHTML += createDeliveryCard(order);
             });
-            // Initialize Bootstrap tooltips
+            // Initialize Bootstrap tooltips (dispose any existing ones first)
             const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                // Dispose existing tooltip if any
+                const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+                if (existingTooltip) {
+                    existingTooltip.dispose();
+                }
                 new bootstrap.Tooltip(tooltipTriggerEl);
             });
         }
