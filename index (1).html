@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Wagon Transport Order Confirmation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            min-height: 100vh;
+            background-color: #f4f7fa;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .header-section {
+            background-color: #00002d;
+            color: white;
+            padding: 40px;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .header-section h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
+
+        .main-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin: 40px auto;
+            max-width: 1000px;
+        }
+
+        .login-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin: 100px auto;
+            max-width: 450px;
+            padding: 40px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            color: #00002d;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: #6b7280;
+        }
+
+        .form-control, .form-select {
+            background-color: #f0f3f8;
+            border: 1px solid #d1d5db;
+            color: #1f2937;
+            font-weight: 500;
+            font-size: 1rem;
+            height: 44px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #00002d;
+            margin-bottom: 5px;
+        }
+        
+        .order-card {
+            border: 1px solid #e5e7eb;
+            border-left: 5px solid #3b82f6;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        .order-card h5 {
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f3f8;
+            padding-bottom: 5px;
+        }
+
+        .btn-custom {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 10px 30px;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-custom:hover {
+            background-color: #1e3a8a;
+            color: white;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        .section-header {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="container">
+        <div class="login-card">
+            <div class="login-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 60px; margin-bottom: 20px;">
+                <h2>Anmeldung erforderlich</h2>
+                <p>Bitte melden Sie sich an, um auf die Transportaufträge zuzugreifen.</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Benutzername</label>
+                    <input type="text" class="form-control" id="username" name="username" required autocomplete="username">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="password" class="form-label">Passwort</label>
+                    <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
+                </div>
+                
+                <div id="login-alert" class="mb-3"></div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-custom" id="login-btn">
+                        <span id="login-btn-text">Anmelden</span>
+                        <span id="login-spinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application (hidden until login) -->
+    <div id="main-app" class="container hidden">
+        <div class="main-card">
+            <div class="header-section text-center">
+                <h1>Wagon Transport Order Editor <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 1.2em; vertical-align: middle;"></h1>
+                <p class="lead" style="color: #dbeafe;">Bitte überprüfen und bestätigen Sie die Liefer-/Abhol-Slots.</p>
+            </div>
+
+            <div class="p-4">
+                <form id="order-form">
+                    <div id="orders-container">
+                        <div class="alert alert-info" role="alert">Lade Bestelldaten...</div>
+                    </div>
+
+                    <div id="alert-container" class="mt-4"></div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-custom mt-3">Aufträge bestätigen & an Logistik senden</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU';
+        const ORDER_SUBMIT_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Av88DsAwouKcWS5YfbpnzNnY0g3_8WuksH9nLJQRj48';
+        
+        // Session token storage
+        let sessionToken = null;
+
+        // Configuration
+        const CONFIG = {
+            profiles: ['G1', 'G2'],
+            wagonTypes: ['Offen', 'Geschlossen', 'Offen + Geschlossen'],
+            reasons: [
+                { value: 'None', text: '— Keine Unterlieferung —' },
+                { value: '05', text: '05 Falsche Waggongattung angeliefert' },
+                { value: '06', text: '06 Fehlende Waggons - Schadwaggon' },
+                { value: '07', text: '07 Ausrangierung Schadwaggons' },
+                { value: '08', text: '08 fehlende Lokführerverfügbarkeit' },
+                { value: '09', text: '09 zu wenige Waggons - falsche Planung Bahn-DL' },
+                { value: '10', text: '10 zu spät angelieferte Waggons' },
+                { value: '11', text: '11 Fehlende Lokführerverfügbarkeit' },
+                { value: '12', text: '12 Zugverspätung - Arbeitszeit Ende' },
+                { value: '13', text: '13 Zugverspätung - Sonstiges Bahn DL' },
+                { value: '14', text: '14 Zugverspätung -   Sonstiges' },
+                { value: '15', text: '15 Streik - Bahn Infrastruktur' },
+                { value: '25', text: '25 technische Störungen Bahnhof bzw. Rangierer' },
+                { value: '26', text: '26 technische Störungen auf der Strecke (z.B. Bahnübergang, Stellwerkstörung)' },
+                { value: '27', text: '27 Rangierleistung nicht ausreichend - Rangierdienst unterbesetzt' },
+                { value: '28', text: '28 Rangierleistung nicht ausreichend  - Rangierdienst in Pause' },
+                { value: '29', text: '29 Rangierleistung nicht ausreichend - Lokschaden/ Lokstörung' },
+                { value: '30', text: '30 Zeitplanung Rangierverkehr' },
+                { value: '31', text: '31 Rangierleistung nicht ausreichend (z.B. bei zu viel Rangierung Schadwaggons/Züge gleichzeitig/Lokverfügbarkeit/Lokführer krank, Lokstörrung…)' },
+                { value: '32', text: '32 Stellwerk nicht besetzt' },
+                { value: '33', text: '33 Lokzuführung verspätet' },
+                { value: '34', text: '34 Warten aus Lok - Störung auf der Strecke; Fahren auf Sicht' },
+                { value: '35', text: '35 Warten auf Lok - Infrastruktur überlastet' },
+                { value: '36', text: '36 Warten aus Lok - Sonstiges' },
+                { value: '37', text: '37 Streckensperrung --> keine Umleitung möglich' },
+                { value: '38', text: '38 Baustelle/ Infrastruktur' },
+                { value: '39', text: '39 Blockierung Transportwege (Abgrenzung zur technischen Störrung, z.B. liegengebliebener Zug auf der Strecke)' },
+                { value: '40', text: '40 Umleitung netzbedingt; Personen im Gleis' },
+                { value: '41', text: '41 Infrastruktur (Baustellen, Oberleitungsstörung, Rückstau wg. Überfüllung der Umleitungen)' },
+                { value: '42', text: '42 fehlende Trassenverfügbarkeit' },
+                { value: '43', text: '43 Dispositive Zulaufsteuerung' },
+                { value: '53', text: '53 Fehlende Waggons - falsche Planung Bahn-DL' }
+            ]
+        };
+
+        function showLoginAlert(message, type) {
+            const alertContainer = document.getElementById('login-alert');
+            alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                                            ${message}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
+        }
+        
+        function generateTimeSlots(intervalMinutes) {
+            const slots = [];
+            for (let h = 0; h < 24; h++) {
+                for (let m = 0; m < 60; m += intervalMinutes) {
+                    const time = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                    if (intervalMinutes === 15) {
+                        slots.push({ value: time, text: time });
+                    } else if (intervalMinutes === 120 && m === 0) {
+                        const nextHour = String((h + 2) % 24).padStart(2, '0');
+                        const slotText = `${time} - ${nextHour}:00`;
+                        slots.push({ value: slotText, text: slotText });
+                    }
+                }
+            }
+            return slots;
+        }
+
+        const arrivalSlots = generateTimeSlots(120);
+        const departureSlots = generateTimeSlots(15);
+        
+        // Normalize the data to match the expected format
+        function normalizeOrder(order) {
+            const departure = order.Departure || order.departure || 'N/A';
+            const destination = order.Destination || order.destination || 'N/A';
+            
+            return {
+                orderId: order.OrderID || order.orderId,
+                supplier: order.SupplierName || order.supplier,
+                cw: order.CW || order.cw,
+                wagons: order.RequiredWagons || order.wagons,
+                transportDate: (order.Transportdatum || order.transportDate || '').trim(),
+                wagonProfile: order.WagonProfile || order.wagonProfile,
+                wagonType: order.WagonType || order.wagonType,
+                departure: departure,
+                destination: destination,
+                route: `${departure} nach ${destination}`,
+                deliveryDate: order.deliveryDate || ''
+            };
+        }
+        
+        function getOrdersFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const encodedData = params.get('data');
+            
+            try {
+                if (!encodedData) {
+                    return [];
+                }
+                
+                let jsonString;
+                
+                // Try to decode as base64 first
+                try {
+                    // Decode base64
+                    jsonString = atob(encodedData);
+                    console.log('Data decoded from base64');
+                } catch (base64Error) {
+                    // If base64 decoding fails, try URL decoding (backward compatibility)
+                    console.log('Base64 decoding failed, trying URL decode for backward compatibility');
+                    jsonString = decodeURIComponent(encodedData);
+                }
+                
+                console.log('Decoded JSON string:', jsonString);
+                
+                const parsedData = JSON.parse(jsonString);
+                const ordersArray = Array.isArray(parsedData) ? parsedData : [parsedData];
+                
+                // Normalize all orders to match expected format
+                return ordersArray.map(order => normalizeOrder(order));
+            } catch (e) {
+                console.error("Fehler beim Parsen der Bestelldaten:", e);
+                console.error("Encoded data:", encodedData);
+                return [];
+            }
+        }
+        
+        function createOrderCard(order) {
+            const id = order.orderId || 'UNKNOWN';
+            
+            const profileOptions = CONFIG.profiles.map(p => 
+                `<option value="${p}" ${p === order.wagonProfile ? 'selected' : ''}>${p}</option>`
+            ).join('');
+            
+            const typeOptions = CONFIG.wagonTypes.map(t => 
+                `<option value="${t}" ${t === order.wagonType ? 'selected' : ''}>${t}</option>`
+            ).join('');
+
+            const reasonOptions = CONFIG.reasons.map(r => 
+                `<option value="${r.value}">${r.text}</option>`
+            ).join('');
+
+            const arrivalOptions = arrivalSlots.map(s => 
+                `<option value="${s.value}">${s.text}</option>`
+            ).join('');
+
+            const departureOptions = departureSlots.map(s => 
+                `<option value="${s.value}">${s.text}</option>`
+            ).join('');
+            
+            // Convert date from DD.MM.YYYY to YYYY-MM-DD for input[type="date"]
+            function convertDate(dateStr) {
+                if (!dateStr) return '';
+                const trimmed = dateStr.trim();
+                const parts = trimmed.split('.');
+                if (parts.length === 3) {
+                    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                }
+                return trimmed;
+            }
+
+            return `
+                <div class="order-card" data-order-id="${id}">
+                    <h5>Order ID: ${id} | Supplier: ${order.supplier || 'N/A'} | Route: ${order.route || 'N/A'}</h5>
+                    <p class="mb-3 text-muted small">KW: ${order.cw || 'N/A'}</p>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="wagons-${id}" class="form-label">Wagons (Qty.)</label>
+                            <input type="number" class="form-control" id="wagons-${id}" name="wagons-${id}" value="${order.wagons || 1}" min="1" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="date-${id}" class="form-label">Transport Date</label>
+                            <input type="date" class="form-control" id="date-${id}" name="date-${id}" value="${convertDate(order.transportDate)}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="profile-${id}" class="form-label">Wagon Profile</label>
+                            <select class="form-select" id="profile-${id}" name="profile-${id}" required>
+                                ${profileOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="type-${id}" class="form-label">Wagon Type</label>
+                            <select class="form-select" id="type-${id}" name="type-${id}" required>
+                                ${typeOptions}
+                            </select>
+                        </div>
+                        
+                        <!-- DEPARTURE TIME SLOTS -->
+                        <div class="col-12 mt-3">
+                            <h6 class="text-primary border-bottom pb-2">📍 Departure Time Slots (${order.departure})</h6>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="departure-arrival-slot-${id}" class="form-label">Arrival Time Slot (2h)</label>
+                            <select class="form-select" id="departure-arrival-slot-${id}" name="departure-arrival-slot-${id}" required>
+                                ${arrivalOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="departure-time-${id}" class="form-label">Departure Time (15min)</label>
+                            <select class="form-select" id="departure-time-${id}" name="departure-time-${id}" required>
+                                ${departureOptions}
+                            </select>
+                        </div>
+                        
+                        <!-- DESTINATION TIME SLOTS -->
+                        <div class="col-12 mt-3">
+                            <h6 class="text-success border-bottom pb-2">🎯 Destination Time Slots (${order.destination})</h6>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="delivery-date-${id}" class="form-label">Delivery Date</label>
+                            <input type="date" class="form-control" id="delivery-date-${id}" name="delivery-date-${id}" value="${convertDate(order.deliveryDate)}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="destination-arrival-slot-${id}" class="form-label">Arrival Time Slot (2h)</label>
+                            <select class="form-select" id="destination-arrival-slot-${id}" name="destination-arrival-slot-${id}" required>
+                                ${arrivalOptions}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="destination-departure-time-${id}" class="form-label">Departure Time (15min)</label>
+                            <select class="form-select" id="destination-departure-time-${id}" name="destination-departure-time-${id}" required>
+                                ${departureOptions}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mt-3">
+                            <label for="reason-${id}" class="form-label">Reason for Underdelivery</label>
+                            <select class="form-select" id="reason-${id}" name="reason-${id}" required>
+                                ${reasonOptions}
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label for="comment-${id}" class="form-label">Comment (Free Text)</label>
+                            <textarea class="form-control" id="comment-${id}" name="comment-${id}" rows="2" placeholder="Freitextkommentar eingeben..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function loadForm() {
+            const ordersData = getOrdersFromUrl();
+            const container = document.getElementById('orders-container');
+            container.innerHTML = '';
+            if (ordersData.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Fehler:</strong> Es wurden keine Bestelldaten übergeben oder die Daten konnten nicht geladen werden.
+                        <br><br>
+                        Bitte wenden Sie sich an das Logistik-Team oder überprüfen Sie den Link.
+                    </div>`;
+                const submitBtn = document.querySelector('#order-form button[type="submit"]');
+                if (submitBtn) submitBtn.disabled = true;
+                return;
+            }
+            ordersData.forEach(order => {
+                container.innerHTML += createOrderCard(order);
+            });
+        }
+
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
+                                            ${message}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
+        }
+
+        // Initialize everything when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded - Login screen should be visible');
+            
+            // Handle Login with Power Automate Authentication
+            document.getElementById('login-form').addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value;
+                
+                // Show loading state
+                const loginBtn = document.getElementById('login-btn');
+                const loginBtnText = document.getElementById('login-btn-text');
+                const loginSpinner = document.getElementById('login-spinner');
+                
+                loginBtn.disabled = true;
+                loginBtnText.textContent = 'Überprüfung...';
+                loginSpinner.classList.remove('hidden');
+                
+                try {
+                    // Call Power Automate authentication flow
+                    const response = await fetch(AUTH_FLOW_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password,
+                            timestamp: new Date().toISOString()
+                        })
+                    });
+
+                    const result = await response.json();
+                    
+                    if (response.ok && result.authenticated === true) {
+                        console.log('Login successful');
+                        // Store session token if provided
+                        sessionToken = result.token || null;
+                        
+                        // Successful login
+                        document.getElementById('login-screen').classList.add('hidden');
+                        document.getElementById('main-app').classList.remove('hidden');
+                        loadForm();
+                    } else {
+                        console.log('Login failed');
+                        showLoginAlert('Ungültiger Benutzername oder Passwort. Bitte versuchen Sie es erneut.', 'danger');
+                        
+                        // Reset button state
+                        loginBtn.disabled = false;
+                        loginBtnText.textContent = 'Anmelden';
+                        loginSpinner.classList.add('hidden');
+                    }
+                } catch (error) {
+                    console.error('Authentication error:', error);
+                    showLoginAlert('Verbindungsfehler. Bitte versuchen Sie es später erneut.', 'danger');
+                    
+                    // Reset button state
+                    loginBtn.disabled = false;
+                    loginBtnText.textContent = 'Anmelden';
+                    loginSpinner.classList.add('hidden');
+                }
+            });
+
+            // Handle Order Form Submission
+            document.getElementById('order-form').addEventListener('submit', async function (event) {
+                event.preventDefault();
+                
+                const ordersData = [];
+                const orderCards = document.querySelectorAll('.order-card');
+                
+                orderCards.forEach(card => {
+                    const id = card.getAttribute('data-order-id');
+                    
+                    const orderData = {
+                        orderId: id,
+                        wagons: parseInt(document.getElementById(`wagons-${id}`).value, 10),
+                        transportDate: document.getElementById(`date-${id}`).value,
+                        deliveryDate: document.getElementById(`delivery-date-${id}`).value,
+                        wagonProfile: document.getElementById(`profile-${id}`).value,
+                        wagonType: document.getElementById(`type-${id}`).value,
+                        departureArrivalSlot: document.getElementById(`departure-arrival-slot-${id}`).value,
+                        departureTime: document.getElementById(`departure-time-${id}`).value,
+                        destinationArrivalSlot: document.getElementById(`destination-arrival-slot-${id}`).value,
+                        destinationDepartureTime: document.getElementById(`destination-departure-time-${id}`).value,
+                        reasonUnderdelivery: document.getElementById(`reason-${id}`).value,
+                        comment: document.getElementById(`comment-${id}`).value
+                    };
+                    
+                    ordersData.push(orderData);
+                });
+                
+                const finalPayload = {
+                    submissionTimestamp: new Date().toISOString(),
+                    sessionToken: sessionToken,
+                    orders: ordersData
+                };
+
+                try {
+                    const response = await fetch(ORDER_SUBMIT_URL, {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(finalPayload)
+                    });
+
+                    if (response.ok) {
+                        showAlert('Success! Alle Transportaufträge wurden bestätigt und an die Logistik gesendet.', 'success');
+                        document.getElementById('order-form').querySelector('button[type="submit"]').disabled = true;
+                    } else {
+                        const errorText = await response.text();
+                        showAlert(`Übermittlung fehlgeschlagen. Server-Status: ${response.status}.`, 'danger');
+                    }
+                } catch (error) {
+                    showAlert('Ein Fehler ist aufgetreten. Bitte prüfen Sie Ihre Verbindung oder wenden Sie sich an den Support.', 'danger');
+                    console.error("Fetch Error:", error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
