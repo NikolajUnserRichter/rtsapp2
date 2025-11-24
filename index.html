@@ -63,78 +63,54 @@
             margin-bottom: 5px;
         }
         .order-card {
-            border: 1.5px solid #3b82f6;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            padding: 0;
+            border: 1px solid #e5e7eb;
+            border-left: 5px solid #3b82f6;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 22px 22px 10px 22px;
             background-color: #ffffff;
-            box-shadow: 0 2px 8px rgba(59,130,246,0.07);
         }
-        .order-card .order-header {
-            padding: 18px 24px 10px 24px;
-            border-bottom: 1px solid #eee;
-        }
-        .order-card .order-title {
+        .order-card h5 {
             font-weight: 700;
-            font-size: 1.25rem;
-            color: #2563eb;
-            margin-bottom: 3px;
+            color: #3b82f6;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #f0f3f8;
+            padding-bottom: 5px;
         }
-        .order-card .order-meta {
-            font-size: 1.01rem;
-            color: #666;
-            margin-bottom: 0;
+        .btn-custom {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 10px 30px;
+            border: none;
+            transition: background-color 0.3s ease;
         }
-        .order-card .order-meta strong {
-            color: #222;
-            font-weight: 700;
+        .btn-custom:hover {
+            background-color: #1e3a8a;
+            color: white;
         }
-        .order-card .divider {
-            border-bottom: 1px solid #eee;
-            margin: 0 24px 10px 24px;
+        .hidden {
+            display: none !important;
         }
-        .order-card .order-body {
-            padding: 18px 24px 18px 24px;
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
         }
-        .cluster {
-            margin-bottom: 14px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 22px 24px;
+        .readonly-label {
+            display: block;
+            font-weight: 500;
+            color: #767676;
         }
-        .cluster .input-group {
-            flex: 1 1 190px;
-            min-width: 180px;
-            max-width: 220px;
+        .readonly-data {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+            margin-bottom: 13px;
         }
-        .cluster-wide {
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 18px;
-        }
-        .cluster-wide .input-group {
-            flex: 1 1 0;
-            min-width: 260px;
-            max-width: none;
-        }
-        .comment-area {
-            width:100%;
-            min-height: 74px;
-            resize: vertical;
-        }
-        .form-label[for^="ist-transportdatum-"] {
-            cursor: help;
-            border-bottom: 1px dotted #bbb;
-        }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        @media (max-width: 800px) {
-            .order-card .order-header, .order-card .order-body { padding: 18px 10px 10px 10px; }
-            .order-card .divider { margin: 0 10px 10px 10px; }
-            .cluster, .cluster-wide { flex-direction: column; gap: 10px; }
+        .form-text {
+            font-size: 0.92em;
         }
     </style>
 </head>
@@ -193,11 +169,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // ============================================
+        // CONFIGURATION
+        // ============================================
         const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU';
-        const ORDER_SUBMIT_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/57811f085180473188001322dee3482f/triggers/m[...]';
-
+        const ORDER_SUBMIT_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c3b6894a81804e10a1040bf9d114ae16/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3k9xRRQyzvzaQPioR6-EuOVGvns-Ap0jE3CYRe4C8Ys';
+        
         let sessionToken = null;
 
+        // Reason for short delivery destination options ("Reason Short Delivery Destination")
         const REASON_SHORT_DELIVERY = [
             { value: 'None', text: '— Keine Unterlieferung —' },
             { value: '05', text: '05 Falsche Waggongattung angeliefert' },
@@ -236,11 +215,12 @@
         function showLoginAlert(message, type) {
             const alertContainer = document.getElementById('login-alert');
             alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>`;
+                                            ${message}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
         }
 
+        // Generate 2-hour time slots as options (00:00-02:00, ..., 22:00-00:00)
         function generate2HourSlots() {
             const slots = [];
             for (let h = 0; h < 24; h += 2) {
@@ -256,6 +236,7 @@
         }
         const twoHourSlotOptionsHtml = generate2HourSlots();
 
+        // Get/normalize order data from URL
         function getOrdersFromUrl() {
             const params = new URLSearchParams(window.location.search);
             const encodedData = params.get('data');
@@ -268,17 +249,14 @@
                 const parsedData = JSON.parse(jsonString);
                 const ordersArray = Array.isArray(parsedData) ? parsedData : [parsedData];
                 return ordersArray.map(order => {
-                    // cluster id/dep/dest for headline
-                    const departure = order.Departure ?? order.departure ?? 'N/A';
-                    const destination = order.Destination ?? order.destination ?? 'N/A';
+                    const departure = order.Departure || order.departure || 'N/A';
+                    const destination = order.Destination || order.destination || 'N/A';
                     return {
-                        orderId: order.OrderID ?? order.orderId,
-                        supplier: order.SupplierName ?? order.supplier,
-                        cw: order.CW ?? order.cw,
-                        route: `${order.orderId ?? ''} | ${departure} nach ${destination}`,
-                        departure,
-                        destination,
-                        wagons: order.wagons ?? '',
+                        orderId: order.OrderID || order.orderId,
+                        supplier: order.SupplierName || order.supplier,
+                        cw: order.CW || order.cw,
+                        route: `${departure} nach ${destination}`,
+                        deliveryDate: (order.deliveryDate || order.DeliveryDate || '').trim(),
                     };
                 });
             } catch (e) {
@@ -291,55 +269,55 @@
             const reasonOpts = REASON_SHORT_DELIVERY.map(r=> `<option value="${r.value}">${r.text}</option>`).join('');
 
             return `
-                <div class="order-card mb-4" data-order-id="${id}">
-                    <div class="order-header">
-                        <div class="order-title">${order.orderId ? order.orderId : ''} ${order.departure} nach ${order.destination}</div>
-                        <div class="row g-1 mt-1 align-items-end order-meta">
-                            <div class="col"><span class="readonly-label">Dienstleister</span> <strong>${order.supplier || 'N/A'}</strong></div>
-                            <div class="col"><span class="readonly-label">KW</span> <strong>${order.cw || 'N/A'}</strong></div>
+                <div class="order-card" data-order-id="${id}">
+                    <h5>${order.route ? order.route : ''}</h5>
+                    <div class="row g-3">
+                        <!-- Anzeigen nicht ändern -->
+                        <div class="col-md-6 mb-1">
+                            <label class="readonly-label">Dienstleister</label>
+                            <span class="readonly-data">${order.supplier || 'N/A'}</span>
+                        </div>
+                        <div class="col-md-3 mb-1">
+                            <label class="readonly-label">KW</label>
+                            <span class="readonly-data">${order.cw || 'N/A'}</span>
+                        </div>
+                        <div class="col-md-3 mb-1">
+                            <label class="readonly-label">Delivery Date (Plan)</label>
+                            <span class="readonly-data">${order.deliveryDate || ''}</span>
                         </div>
                     </div>
-                    <div class="order-body">
-                        <div class="cluster mb-2">
-                            <div class="input-group">
-                                <label for="delivered-wagons-${id}" class="form-label">Gelieferte Waggons</label>
-                                <input type="number" class="form-control" id="delivered-wagons-${id}" name="delivered-wagons-${id}" min="0" value="${order.wagons || ''}" required>
-                            </div>
-                            <div class="input-group">
-                                <label 
-                                    for="ist-transportdatum-${id}" 
-                                    class="form-label"
-                                    data-bs-toggle="tooltip"
-                                    data-bs-placement="top"
-                                    title="Dieses Datum ggf. am Empfangsort eintragen"
-                                >
-                                    Ist-Transportdatum
-                                </label>
-                                <input type="date" class="form-control" id="ist-transportdatum-${id}" name="ist-transportdatum-${id}">
-                            </div>
-                            <div class="input-group">
-                                <label for="delivery-time-slot-${id}" class="form-label">Lieferzeit-Slot (2h)</label>
-                                <select class="form-select" id="delivery-time-slot-${id}" name="delivery-time-slot-${id}">
-                                    ${twoHourSlotOptionsHtml}
-                                </select>
-                            </div>
-                            <div class="input-group">
-                                <label for="destination-no-show-${id}" class="form-label">No Show am Empfangsort</label>
-                                <select class="form-select" id="destination-no-show-${id}" name="destination-no-show-${id}" required>
-                                    <option value="No">Nein</option>
-                                    <option value="Yes">Ja</option>
-                                </select>
-                            </div>
+                    <hr class="my-2">
+                    <!-- Anzeigen und Änderungen eingeben -->
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label for="delivered-wagons-${id}" class="form-label">Gelieferte Waggons</label>
+                            <input type="number" class="form-control" id="delivered-wagons-${id}" name="delivered-wagons-${id}" min="0" required>
                         </div>
-                        <div class="cluster-wide mb-2">
-                            <div class="input-group">
-                                <label for="reason-short-destination-${id}" class="form-label">Grund Unterlieferung Empfangsort</label>
-                                <select class="form-select" id="reason-short-destination-${id}" name="reason-short-destination-${id}">${reasonOpts}</select>
-                            </div>
-                            <div class="input-group">
-                                <label for="destination-comment-${id}" class="form-label">Kommentar Empfangsort</label>
-                                <textarea class="form-control comment-area" id="destination-comment-${id}" name="destination-comment-${id}" maxlength="512" rows="4"></textarea>
-                            </div>
+                        <div class="col-md-3">
+                            <label for="delivered-transport-date-${id}" class="form-label">Geliefertes Transportdatum</label>
+                            <input type="date" class="form-control" id="delivered-transport-date-${id}" name="delivered-transport-date-${id}">
+                            <div class="form-text">Dieses Datum ggf. am Empfangsort eintragen</div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="delivery-time-slot-${id}" class="form-label">Lieferzeit-Slot (2h)</label>
+                            <select class="form-select" id="delivery-time-slot-${id}" name="delivery-time-slot-${id}">
+                                ${twoHourSlotOptionsHtml}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="destination-no-show-${id}" class="form-label">No Show am Empfangsort</label>
+                            <select class="form-select" id="destination-no-show-${id}" name="destination-no-show-${id}" required>
+                                <option value="No">Nein</option>
+                                <option value="Yes">Ja</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label for="reason-short-destination-${id}" class="form-label">Grund Unterlieferung Empfangsort</label>
+                            <select class="form-select" id="reason-short-destination-${id}" name="reason-short-destination-${id}">${reasonOpts}</select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="destination-comment-${id}" class="form-label">Kommentar Empfangsort</label>
+                            <input type="text" class="form-control" id="destination-comment-${id}" name="destination-comment-${id}" maxlength="255">
                         </div>
                     </div>
                 </div>
@@ -363,20 +341,18 @@
             ordersData.forEach(order => {
                 container.innerHTML += createDeliveryCard(order);
             });
-            // Activate bootstrap tooltip for Ist-Transportdatum
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(el => new bootstrap.Tooltip(el));
         }
 
         function showAlert(message, type) {
             const alertContainer = document.getElementById('alert-container');
             alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>`;
+                                            ${message}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Handle Login
             document.getElementById('login-form').addEventListener('submit', async function(event) {
                 event.preventDefault();
                 const username = document.getElementById('username').value.trim();
@@ -427,7 +403,7 @@
                     deliveryData.push({
                         orderId: id,
                         deliveredWagons: parseInt(document.getElementById(`delivered-wagons-${id}`).value, 10),
-                        deliveredTransportDate: document.getElementById(`ist-transportdatum-${id}`).value,
+                        deliveredTransportDate: document.getElementById(`delivered-transport-date-${id}`).value,
                         deliveryTimeSlot: document.getElementById(`delivery-time-slot-${id}`).value,
                         deliveredDestinationNoShow: document.getElementById(`destination-no-show-${id}`).value === "Yes",
                         reasonShortDeliveryDestination: document.getElementById(`reason-short-destination-${id}`).value,
