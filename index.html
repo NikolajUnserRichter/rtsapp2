@@ -365,32 +365,32 @@
                     </h5>
                     <div class="row g-3 mb-3">
                         <!-- Anzeigen nicht ändern -->
-                        <div class="col-md-6 mb-1">
+                        <div class="col-md-4 mb-1">
                             <label class="readonly-label">Dienstleister</label>
                             <span class="readonly-data">${escapeHtml(order.supplier || 'N/A')}</span>
                         </div>
-                        <div class="col-md-6 mb-1">
-                            <label class="readonly-label">Abfahrt</label>
-                            <span class="readonly-data">${escapeHtml(order.departure || 'N/A')}</span>
-                        </div>
-                        <div class="col-md-6 mb-1">
+                        <div class="col-md-4 mb-1">
                             <label class="readonly-label">KW</label>
                             <span class="readonly-data">${escapeHtml(order.cw || 'N/A')}</span>
                         </div>
-                        <div class="col-md-6 mb-1">
-                            <label for="delivered-transport-date-${id}" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Dieses Datum ggf. am Empfangsort eintragen">Ist-Transportdatum</label>
-                            <input type="date" class="form-control" id="delivered-transport-date-${id}" name="delivered-transport-date-${id}" value="${escapeHtml(convertDateToISO(order.dlTransportdate || ''))}">
+                        <div class="col-md-4 mb-1">
+                            <label class="readonly-label">Soll-Transportdatum</label>
+                            <span class="readonly-data">${escapeHtml(order.dlTransportdate || 'N/A')}</span>
                         </div>
                     </div>
                     <hr class="my-2">
                     <!-- Anzeigen und Änderungen eingeben -->
                     <div class="row g-3">
                         <!-- Lieferdetails Gruppe -->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="delivered-wagons-${id}" class="form-label">Gelieferte Waggons</label>
                             <input type="number" class="form-control" id="delivered-wagons-${id}" name="delivered-wagons-${id}" min="0" value="${escapeHtml(String(order.deliveredWagons || ''))}" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label for="delivered-transport-date-${id}" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Dieses Datum ggf. am Empfangsort eintragen">Ist-Transportdatum</label>
+                            <input type="date" class="form-control" id="delivered-transport-date-${id}" name="delivered-transport-date-${id}" value="${escapeHtml(convertDateToISO(order.dlTransportdate || ''))}">
+                        </div>
+                        <div class="col-md-4">
                             <label for="delivery-time-slot-${id}" class="form-label">Lieferzeit-Slot (2h)</label>
                             <select class="form-select" id="delivery-time-slot-${id}" name="delivery-time-slot-${id}">
                                 ${twoHourSlotOptionsHtml}
@@ -398,14 +398,14 @@
                         </div>
                         
                         <!-- No Show und Grund Gruppe -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label for="destination-no-show-${id}" class="form-label">No Show am Empfangsort</label>
                             <select class="form-select" id="destination-no-show-${id}" name="destination-no-show-${id}" required>
                                 <option value="No">Nein</option>
                                 <option value="Yes">Ja</option>
                             </select>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-6">
                             <label for="reason-short-destination-${id}" class="form-label">Grund Unterlieferung Empfangsort</label>
                             <select class="form-select" id="reason-short-destination-${id}" name="reason-short-destination-${id}">${reasonOpts}</select>
                         </div>
