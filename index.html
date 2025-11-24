@@ -326,6 +326,7 @@
                 const parsedData = JSON.parse(jsonString);
                 const ordersArray = Array.isArray(parsedData) ? parsedData : [parsedData];
                 return ordersArray.map(order => {
+                    // Note: Handle 'Depature' typo in source data for backward compatibility
                     const departure = order.Departure || order.departure || order.Depature || 'N/A';
                     const destination = order.Destination || order.destination || 'N/A';
                     return {
@@ -348,7 +349,7 @@
         function createDeliveryCard(order) {
             const id = sanitizeId(order.orderId || 'UNKNOWN');
             
-            // Extract the code from the reason (e.g., "38 Basutelle/Infrastruktur" -> "38")
+            // Extract the code from the reason (e.g., "38 Baustelle/Infrastruktur" -> "38")
             const reasonCode = (order.reasonShortDelivery || '').split(' ')[0] || '';
             
             const reasonOpts = REASON_SHORT_DELIVERY.map(r => {
