@@ -405,7 +405,7 @@
                         deliveredWagons: parseInt(document.getElementById(`delivered-wagons-${id}`).value, 10),
                         deliveredTransportDate: document.getElementById(`delivered-transport-date-${id}`).value,
                         deliveryTimeSlot: document.getElementById(`delivery-time-slot-${id}`).value,
-                        deliveredDestinationNoShow: document.getElementById(`destination-no-show-${id}`).value,
+                        deliveredDestinationNoShow: document.getElementById(`destination-no-show-${id}`).value === "Yes",
                         reasonShortDeliveryDestination: document.getElementById(`reason-short-destination-${id}`).value,
                         destinationComment: document.getElementById(`destination-comment-${id}`).value,
                     });
