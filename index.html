@@ -281,6 +281,7 @@
         function sanitizeId(id) {
             // Remove any characters that are not alphanumeric (including German umlauts), dash, or underscore
             // Allow ä, ö, ü, Ä, Ö, Ü, ß and other common European characters
+            // Note: HTML5 supports non-ASCII characters in IDs. This is necessary for proper German text support.
             return String(id).replace(/[^a-zA-Z0-9\-_äöüÄÖÜß]/g, '');
         }
 
