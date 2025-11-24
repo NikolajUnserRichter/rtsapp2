@@ -239,8 +239,10 @@
 
         function showLoginAlert(message, type) {
             const alertContainer = document.getElementById('login-alert');
+            // Escape message to prevent XSS
+            const escapedMessage = escapeHtml(message);
             alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                                            ${message}
+                                            ${escapedMessage}
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>`;
         }
@@ -378,7 +380,7 @@
             });
             // Initialize Bootstrap tooltips (dispose any existing ones first)
             const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            tooltipTriggerList.forEach((tooltipTriggerEl) => {
                 // Dispose existing tooltip if any
                 const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
                 if (existingTooltip) {
@@ -390,8 +392,10 @@
 
         function showAlert(message, type) {
             const alertContainer = document.getElementById('alert-container');
+            // Escape message to prevent XSS
+            const escapedMessage = escapeHtml(message);
             alertContainer.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
-                                            ${message}
+                                            ${escapedMessage}
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>`;
         }
