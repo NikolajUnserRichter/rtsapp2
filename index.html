@@ -112,6 +112,31 @@
         .form-text {
             font-size: 0.92em;
         }
+        /* Tooltip styling */
+        [data-bs-toggle="tooltip"] {
+            cursor: help;
+        }
+        /* Larger textarea for comments */
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+        /* Order header styling */
+        .order-card h5 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .order-id-badge {
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -270,54 +295,57 @@
 
             return `
                 <div class="order-card" data-order-id="${id}">
-                    <h5>${order.route ? order.route : ''}</h5>
-                    <div class="row g-3">
+                    <h5>
+                        <span>${order.route ? order.route : ''}</span>
+                        <span class="order-id-badge">Auftrag-ID: ${id}</span>
+                    </h5>
+                    <div class="row g-3 mb-3">
                         <!-- Anzeigen nicht ändern -->
                         <div class="col-md-6 mb-1">
                             <label class="readonly-label">Dienstleister</label>
                             <span class="readonly-data">${order.supplier || 'N/A'}</span>
                         </div>
-                        <div class="col-md-3 mb-1">
+                        <div class="col-md-6 mb-1">
                             <label class="readonly-label">KW</label>
                             <span class="readonly-data">${order.cw || 'N/A'}</span>
-                        </div>
-                        <div class="col-md-3 mb-1">
-                            <label class="readonly-label">Delivery Date (Plan)</label>
-                            <span class="readonly-data">${order.deliveryDate || ''}</span>
                         </div>
                     </div>
                     <hr class="my-2">
                     <!-- Anzeigen und Änderungen eingeben -->
                     <div class="row g-3">
-                        <div class="col-md-3">
+                        <!-- Lieferdetails Gruppe -->
+                        <div class="col-md-4">
                             <label for="delivered-wagons-${id}" class="form-label">Gelieferte Waggons</label>
                             <input type="number" class="form-control" id="delivered-wagons-${id}" name="delivered-wagons-${id}" min="0" required>
                         </div>
-                        <div class="col-md-3">
-                            <label for="delivered-transport-date-${id}" class="form-label">Geliefertes Transportdatum</label>
+                        <div class="col-md-4">
+                            <label for="delivered-transport-date-${id}" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Dieses Datum ggf. am Empfangsort eintragen">Ist-Transportdatum</label>
                             <input type="date" class="form-control" id="delivered-transport-date-${id}" name="delivered-transport-date-${id}">
-                            <div class="form-text">Dieses Datum ggf. am Empfangsort eintragen</div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="delivery-time-slot-${id}" class="form-label">Lieferzeit-Slot (2h)</label>
                             <select class="form-select" id="delivery-time-slot-${id}" name="delivery-time-slot-${id}">
                                 ${twoHourSlotOptionsHtml}
                             </select>
                         </div>
-                        <div class="col-md-3">
+                        
+                        <!-- No Show und Grund Gruppe -->
+                        <div class="col-md-4">
                             <label for="destination-no-show-${id}" class="form-label">No Show am Empfangsort</label>
                             <select class="form-select" id="destination-no-show-${id}" name="destination-no-show-${id}" required>
                                 <option value="No">Nein</option>
                                 <option value="Yes">Ja</option>
                             </select>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-8">
                             <label for="reason-short-destination-${id}" class="form-label">Grund Unterlieferung Empfangsort</label>
                             <select class="form-select" id="reason-short-destination-${id}" name="reason-short-destination-${id}">${reasonOpts}</select>
                         </div>
-                        <div class="col-md-4">
+                        
+                        <!-- Kommentar Gruppe -->
+                        <div class="col-12">
                             <label for="destination-comment-${id}" class="form-label">Kommentar Empfangsort</label>
-                            <input type="text" class="form-control" id="destination-comment-${id}" name="destination-comment-${id}" maxlength="255">
+                            <textarea class="form-control" id="destination-comment-${id}" name="destination-comment-${id}" maxlength="500" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
@@ -340,6 +368,11 @@
             }
             ordersData.forEach(order => {
                 container.innerHTML += createDeliveryCard(order);
+            });
+            // Initialize Bootstrap tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
             });
         }
 
