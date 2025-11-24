@@ -104,7 +104,7 @@
             border-radius: var(--radius-lg) var(--radius-lg) 0 0;
         }
         
-        .header-section h1 {
+        .header-section h1, .header-section h2 {
             font-weight: 700;
             font-size: 2.2rem;
         }
@@ -296,7 +296,7 @@
                 padding: var(--spacing-md);
             }
             
-            .header-section h1 {
+            .header-section h1, .header-section h2 {
                 font-size: 1.75rem;
             }
             
@@ -387,7 +387,7 @@
     <div id="main-app" class="container hidden">
         <article class="main-card" role="main" aria-labelledby="main-heading">
             <header class="header-section text-center">
-                <h1 id="main-heading">Transportbestätigung durch Empfangsort <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" width="42" height="42" loading="lazy" decoding="async" style="vertical-align: middle;"></h1>
+                <h2 id="main-heading">Transportbestätigung durch Empfangsort <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" width="42" height="42" loading="lazy" decoding="async" style="vertical-align: middle;"></h2>
                 <p class="lead" style="color: #dbeafe;">
                   Bitte bestätigen Sie als Empfangsort die empfangenen Werte zu den untenstehenden Transporten.
                 </p>
@@ -395,7 +395,7 @@
             <section id="main-content" class="p-4" aria-labelledby="main-heading">
                 <form id="delivery-form" novalidate aria-labelledby="main-heading">
                     <div id="orders-container" role="region" aria-label="Transportaufträge">
-                        <div class="alert alert-info" role="status" aria-live="polite" aria-busy="true">Lade Bestelldaten...</div>
+                        <div class="alert alert-info" role="status" aria-live="polite">Lade Bestelldaten...</div>
                     </div>
                     <div id="alert-container" class="mt-4" role="alert" aria-live="assertive" aria-atomic="true"></div>
                     <div class="d-grid gap-2">
@@ -585,7 +585,7 @@
         function base64DecodeUnicode(str) {
             // Convert base64 to percent-encoding, then decode
             return decodeURIComponent(atob(str).split('').map(c => 
-                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+                `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`
             ).join(''));
         }
 
@@ -611,9 +611,9 @@
         function generate2HourSlots() {
             const slots = [];
             for (let h = 0; h < 24; h += 2) {
-                const from = String(h).padStart(2, '0') + ':00';
+                const from = `${String(h).padStart(2, '0')}:00`;
                 const toHour = (h + 2) % 24;
-                const to = String(toHour).padStart(2, '0') + ':00';
+                const to = `${String(toHour).padStart(2, '0')}:00`;
                 slots.push({
                     value: `${from} - ${to}`,
                     text: `${from} - ${to}`
@@ -734,10 +734,10 @@
 
             return `
                 <article class="order-card" data-order-id="${id}" role="region" aria-labelledby="order-title-${id}">
-                    <h2 id="order-title-${id}" class="h5">
+                    <h3 id="order-title-${id}" style="font-weight: 700; color: var(--color-primary); margin-bottom: var(--spacing-sm); border-bottom: 2px solid var(--color-gray-100); padding-bottom: var(--spacing-xs); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; font-size: 1.25rem;">
                         <span>${escapeHtml(order.route || '')}</span>
                         <span class="order-id-badge">Auftrag-ID: ${escapeHtml(order.orderId || 'UNKNOWN')}</span>
-                    </h2>
+                    </h3>
                     
                     <fieldset class="border-0 p-0">
                         <legend class="visually-hidden">Auftragsdetails für ${escapeHtml(order.orderId || 'UNKNOWN')}</legend>
