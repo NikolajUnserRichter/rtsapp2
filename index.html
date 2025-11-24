@@ -21,22 +21,87 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Base styles with performance optimizations */
+        /* ============================================
+           CSS VARIABLES - Centralized Theme Values
+           ============================================ */
+        :root {
+            /* Brand Colors */
+            --color-primary: #3b82f6;
+            --color-primary-dark: #1e3a8a;
+            --color-primary-light: #dbeafe;
+            --color-bmw-dark: #00002d;
+            
+            /* Neutral Colors */
+            --color-white: #ffffff;
+            --color-gray-50: #f4f7fa;
+            --color-gray-100: #f0f3f8;
+            --color-gray-200: #e5e7eb;
+            --color-gray-300: #d1d5db;
+            --color-gray-600: #6b7280;
+            --color-gray-700: #767676;
+            --color-gray-800: #1f2937;
+            
+            /* Spacing */
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 20px;
+            --spacing-lg: 30px;
+            --spacing-xl: 40px;
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            
+            /* Shadows */
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            
+            /* Transitions */
+            --transition-fast: 0.1s ease;
+            --transition-normal: 0.3s ease;
+            
+            /* Form Elements */
+            --form-height: 44px;
+            --textarea-min-height: 80px;
+        }
+        
+        /* ============================================
+           BASE STYLES
+           ============================================ */
         body {
             min-height: 100vh;
-            background-color: #f4f7fa;
+            background-color: var(--color-gray-50);
             font-family: 'Montserrat', sans-serif;
             /* Enable hardware acceleration */
             transform: translateZ(0);
             backface-visibility: hidden;
         }
         
-        /* Header and card styles - using efficient selectors */
+        /* Skip Navigation Link for Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-bmw-dark);
+            color: var(--color-white);
+            padding: var(--spacing-sm);
+            text-decoration: none;
+            z-index: 100;
+        }
+        
+        .skip-link:focus {
+            top: 0;
+        }
+        
+        /* ============================================
+           HEADER AND CARD STYLES
+           ============================================ */
         .header-section {
-            background-color: #00002d;
-            color: white;
-            padding: 40px;
-            border-radius: 12px 12px 0 0;
+            background-color: var(--color-bmw-dark);
+            color: var(--color-white);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
         }
         
         .header-section h1 {
@@ -45,10 +110,10 @@
         }
         
         .main-card, .login-card {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin: 40px auto;
+            background-color: var(--color-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin: var(--spacing-xl) auto;
         }
         
         .main-card {
@@ -56,41 +121,43 @@
         }
         
         .login-card {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
             margin: 100px auto;
             max-width: 450px;
-            padding: 40px;
+            padding: var(--spacing-xl);
         }
         
         .login-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: var(--spacing-lg);
         }
         
         .login-header h2 {
-            color: #00002d;
+            color: var(--color-bmw-dark);
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: var(--spacing-sm);
         }
         
         .login-header p {
-            color: #6b7280;
+            color: var(--color-gray-600);
         }
         
-        /* Form styles - combined selectors for efficiency */
+        /* ============================================
+           FORM STYLES
+           ============================================ */
         .form-control, .form-select {
-            background-color: #f0f3f8;
-            border: 1px solid #d1d5db;
-            color: #1f2937;
+            background-color: var(--color-gray-100);
+            border: 1px solid var(--color-gray-300);
+            color: var(--color-gray-800);
             font-weight: 500;
             font-size: 1rem;
-            height: 44px;
+            height: var(--form-height);
         }
         
         .form-label {
             font-weight: 600;
-            color: #00002d;
-            margin-bottom: 5px;
+            color: var(--color-bmw-dark);
+            margin-bottom: var(--spacing-xs);
         }
         
         .form-text {
@@ -98,28 +165,39 @@
         }
         
         textarea.form-control {
-            min-height: 80px;
+            min-height: var(--textarea-min-height);
             resize: vertical;
+            height: auto;
         }
         
-        /* Order card styles */
+        /* Focus styles for accessibility */
+        .form-control:focus, .form-select:focus, .btn:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+        }
+        
+        /* ============================================
+           ORDER CARD STYLES
+           ============================================ */
         .order-card {
-            border: 1px solid #e5e7eb;
-            border-left: 5px solid #3b82f6;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            border: 1px solid var(--color-gray-200);
+            border-left: 5px solid var(--color-primary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
             padding: 22px 22px 10px 22px;
-            background-color: #ffffff;
+            background-color: var(--color-white);
             /* Use transform for better performance */
             will-change: transform;
         }
         
         .order-card h5 {
             font-weight: 700;
-            color: #3b82f6;
-            margin-bottom: 10px;
-            border-bottom: 2px solid #f0f3f8;
-            padding-bottom: 5px;
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+            border-bottom: 2px solid var(--color-gray-100);
+            padding-bottom: var(--spacing-xs);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -127,38 +205,47 @@
         }
         
         .order-id-badge {
-            background-color: #dbeafe;
-            color: #1e40af;
+            background-color: var(--color-primary-light);
+            color: var(--color-primary-dark);
             padding: 4px 12px;
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             font-size: 0.9rem;
             font-weight: 600;
-            margin-left: 10px;
+            margin-left: var(--spacing-sm);
         }
         
-        /* Button styles with GPU acceleration */
+        /* ============================================
+           BUTTON STYLES
+           ============================================ */
         .btn-custom {
-            background-color: #3b82f6;
-            color: white;
+            background-color: var(--color-primary);
+            color: var(--color-white);
             font-weight: 600;
             font-size: 1.1rem;
-            padding: 10px 30px;
+            padding: var(--spacing-sm) var(--spacing-lg);
             border: none;
-            transition: background-color 0.3s ease, transform 0.1s ease;
+            transition: background-color var(--transition-normal), transform var(--transition-fast);
             will-change: background-color;
         }
         
-        .btn-custom:hover {
-            background-color: #1e3a8a;
-            color: white;
+        .btn-custom:hover:not(:disabled) {
+            background-color: var(--color-primary-dark);
+            color: var(--color-white);
             transform: translateY(-1px);
         }
         
-        .btn-custom:active {
+        .btn-custom:active:not(:disabled) {
             transform: translateY(0);
         }
         
-        /* Utility classes */
+        .btn-custom:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        /* ============================================
+           UTILITY CLASSES
+           ============================================ */
         .hidden {
             display: none !important;
         }
@@ -172,56 +259,120 @@
         .readonly-label {
             display: block;
             font-weight: 500;
-            color: #767676;
+            color: var(--color-gray-700);
         }
         
         .readonly-data {
             font-weight: 600;
-            color: #1f2937;
+            color: var(--color-gray-800);
             font-size: 1.1rem;
             margin-bottom: 13px;
         }
         
-        /* Accessibility and interaction improvements */
+        /* ============================================
+           ACCESSIBILITY IMPROVEMENTS
+           ============================================ */
         [data-bs-toggle="tooltip"] {
             cursor: help;
         }
         
-        /* Focus styles for accessibility */
-        .form-control:focus, .form-select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
-            outline: none;
+        /* Ensure keyboard focus is visible */
+        *:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
         }
         
-        /* Loading state optimization */
+        /* Loading state */
         .loading {
             pointer-events: none;
             opacity: 0.6;
         }
+        
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            .header-section {
+                padding: var(--spacing-md);
+            }
+            
+            .header-section h1 {
+                font-size: 1.75rem;
+            }
+            
+            .login-card {
+                margin: var(--spacing-md) auto;
+                padding: var(--spacing-md);
+            }
+            
+            .order-card {
+                padding: var(--spacing-md);
+            }
+            
+            .order-card h5 {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--spacing-sm);
+            }
+            
+            .order-id-badge {
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .btn-custom {
+                font-size: 1rem;
+                padding: var(--spacing-sm) var(--spacing-md);
+            }
+        }
+        
+        /* ============================================
+           ANIMATIONS
+           ============================================ */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert {
+            animation: fadeIn 0.3s ease-in-out;
+        }
     </style>
 </head>
 <body>
+    <!-- Skip Navigation for Accessibility -->
+    <a href="#main-content" class="skip-link">Zum Hauptinhalt springen</a>
+
     <!-- Login Screen -->
     <div id="login-screen" class="container">
-        <div class="login-card">
-            <div class="login-header">
+        <main class="login-card" role="main" aria-labelledby="login-heading">
+            <header class="login-header">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" width="60" height="60" loading="eager" decoding="async" style="margin-bottom: 20px;">
-                <h2>Anmeldung erforderlich</h2>
+                <h1 id="login-heading">Anmeldung erforderlich</h1>
                 <p>Bitte melden Sie sich an, um auf die Transportaufträge zuzugreifen.</p>
-            </div>
-            <form id="login-form" novalidate>
-                <div class="mb-3">
-                    <label for="username" class="form-label">Benutzername</label>
-                    <input type="text" class="form-control" id="username" name="username" required autocomplete="username" aria-required="true" minlength="2" maxlength="100">
-                    <div class="invalid-feedback">Bitte geben Sie einen Benutzernamen ein.</div>
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="form-label">Passwort</label>
-                    <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password" aria-required="true" minlength="4" maxlength="100">
-                    <div class="invalid-feedback">Bitte geben Sie ein Passwort ein.</div>
-                </div>
-                <div id="login-alert" class="mb-3" role="alert" aria-live="polite"></div>
+            </header>
+            <form id="login-form" novalidate aria-labelledby="login-heading">
+                <fieldset class="border-0 p-0">
+                    <legend class="visually-hidden">Anmeldeinformationen</legend>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Benutzername</label>
+                        <input type="text" class="form-control" id="username" name="username" required autocomplete="username" aria-required="true" aria-describedby="username-error" minlength="2" maxlength="100" placeholder="Ihren Benutzernamen eingeben">
+                        <div id="username-error" class="invalid-feedback">Bitte geben Sie einen Benutzernamen ein.</div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Passwort</label>
+                        <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password" aria-required="true" aria-describedby="password-error" minlength="4" maxlength="100" placeholder="Ihr Passwort eingeben">
+                        <div id="password-error" class="invalid-feedback">Bitte geben Sie ein Passwort ein.</div>
+                    </div>
+                </fieldset>
+                <div id="login-alert" class="mb-3" role="alert" aria-live="assertive" aria-atomic="true"></div>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-custom" id="login-btn" aria-label="Anmelden">
                         <span id="login-btn-text">Anmelden</span>
@@ -229,37 +380,44 @@
                     </button>
                 </div>
             </form>
-        </div>
+        </main>
     </div>
 
     <!-- Main Application (hidden until login) -->
     <div id="main-app" class="container hidden">
-        <div class="main-card">
-            <div class="header-section text-center">
-                <h1>Transportbestätigung durch Empfangsort <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" width="42" height="42" loading="lazy" decoding="async" style="vertical-align: middle;"></h1>
+        <article class="main-card" role="main" aria-labelledby="main-heading">
+            <header class="header-section text-center">
+                <h1 id="main-heading">Transportbestätigung durch Empfangsort <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" width="42" height="42" loading="lazy" decoding="async" style="vertical-align: middle;"></h1>
                 <p class="lead" style="color: #dbeafe;">
                   Bitte bestätigen Sie als Empfangsort die empfangenen Werte zu den untenstehenden Transporten.
                 </p>
-            </div>
-            <div class="p-4">
-                <form id="delivery-form" novalidate>
-                    <div id="orders-container">
-                        <div class="alert alert-info" role="status" aria-live="polite">Lade Bestelldaten...</div>
+            </header>
+            <section id="main-content" class="p-4" aria-labelledby="main-heading">
+                <form id="delivery-form" novalidate aria-labelledby="main-heading">
+                    <div id="orders-container" role="region" aria-label="Transportaufträge">
+                        <div class="alert alert-info" role="status" aria-live="polite" aria-busy="true">Lade Bestelldaten...</div>
                     </div>
-                    <div id="alert-container" class="mt-4" role="alert" aria-live="polite"></div>
+                    <div id="alert-container" class="mt-4" role="alert" aria-live="assertive" aria-atomic="true"></div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-custom mt-3" aria-label="Bestätigung speichern und senden">Bestätigung speichern & an Logistik senden</button>
                     </div>
                 </form>
-            </div>
-        </div>
+            </section>
+        </article>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous" defer></script>
     <script>
+        'use strict'; // Enable strict mode for better error checking
+        
         // ============================================
         // CONFIGURATION & CONSTANTS
         // ============================================
+        
+        /**
+         * Application configuration constants
+         * @constant {Object}
+         */
         const CONFIG = {
             AUTH_FLOW_URL: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU',
             ORDER_SUBMIT_URL: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c3b6894a81804e10a1040bf9d114ae16/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3k9xRRQyzvzaQPioR6-EuOVGvns-Ap0jE3CYRe4C8Ys',
@@ -267,12 +425,20 @@
             MAX_USERNAME_LENGTH: 100,
             MAX_PASSWORD_LENGTH: 100,
             MAX_COMMENT_LENGTH: 500,
-            VALID_ALERT_TYPES: ['success', 'danger', 'warning', 'info']
+            VALID_ALERT_TYPES: ['success', 'danger', 'warning', 'info'],
+            DEBOUNCE_DELAY: 300 // milliseconds for input debouncing
         };
         
+        /**
+         * Session token for authenticated requests
+         * @type {string|null}
+         */
         let sessionToken = null;
         
-        // Cache for DOM elements to reduce lookups
+        /**
+         * Cache for DOM elements to reduce lookups and improve performance
+         * @constant {Object}
+         */
         const DOM_CACHE = {
             loginScreen: null,
             mainApp: null,
@@ -283,7 +449,10 @@
             loginAlert: null
         };
 
-        // Reason for short delivery destination options ("Reason Short Delivery Destination")
+        /**
+         * Reason codes for short delivery destination
+         * @constant {Array<{value: string, text: string}>}
+         */
         const REASON_SHORT_DELIVERY = [
             { value: 'None', text: '— Keine Unterlieferung —' },
             { value: '05', text: '05 Falsche Waggongattung angeliefert' },
@@ -325,6 +494,7 @@
         
         /**
          * Escapes HTML to prevent XSS attacks
+         * Uses browser's built-in textContent for safe escaping
          * @param {string} text - Text to escape
          * @returns {string} Escaped HTML string
          */
@@ -337,7 +507,7 @@
         /**
          * Validates alert type to prevent CSS class injection
          * @param {string} type - Alert type to validate
-         * @returns {string} Validated alert type
+         * @returns {string} Validated alert type (defaults to 'info' if invalid)
          */
         function validateAlertType(type) {
             return CONFIG.VALID_ALERT_TYPES.includes(type) ? type : 'info';
@@ -367,25 +537,62 @@
         }
 
         // ============================================
+        // PERFORMANCE UTILITIES
+        // ============================================
+        
+        /**
+         * Creates a debounced function that delays invoking func until after delay milliseconds
+         * have elapsed since the last time the debounced function was invoked
+         * @param {Function} func - Function to debounce
+         * @param {number} delay - Delay in milliseconds
+         * @returns {Function} Debounced function
+         */
+        function debounce(func, delay) {
+            let timeoutId;
+            return function debounced(...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+
+        /**
+         * Creates a throttled function that only invokes func at most once per delay milliseconds
+         * @param {Function} func - Function to throttle
+         * @param {number} delay - Delay in milliseconds
+         * @returns {Function} Throttled function
+         */
+        function throttle(func, delay) {
+            let lastCall = 0;
+            return function throttled(...args) {
+                const now = Date.now();
+                if (now - lastCall >= delay) {
+                    lastCall = now;
+                    return func.apply(this, args);
+                }
+            };
+        }
+
+        // ============================================
         // DATA PROCESSING UTILITIES
         // ============================================
         
         /**
          * UTF-8 aware base64 decoding
+         * Handles multi-byte Unicode characters properly
          * @param {string} str - Base64 encoded string
          * @returns {string} Decoded string
          */
         function base64DecodeUnicode(str) {
             // Convert base64 to percent-encoding, then decode
-            return decodeURIComponent(atob(str).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
+            return decodeURIComponent(atob(str).split('').map(c => 
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join(''));
         }
 
         /**
          * Converts date from DD.MM.YYYY format to YYYY-MM-DD (ISO format)
          * @param {string} dateStr - Date string in DD.MM.YYYY format
-         * @returns {string} Date in ISO format
+         * @returns {string} Date in ISO format or original string if parsing fails
          */
         function convertDateToISO(dateStr) {
             if (!dateStr) return '';
@@ -399,14 +606,14 @@
 
         /**
          * Generates 2-hour time slots as HTML options (00:00-02:00, ..., 22:00-00:00)
-         * @returns {string} HTML options string
+         * @returns {string} HTML options string for time slot selection
          */
         function generate2HourSlots() {
             const slots = [];
             for (let h = 0; h < 24; h += 2) {
-                let from = `${String(h).padStart(2, '0')}:00`;
-                let toHour = (h + 2) % 24;
-                let to = `${String(toHour).padStart(2, '0')}:00`;
+                const from = String(h).padStart(2, '0') + ':00';
+                const toHour = (h + 2) % 24;
+                const to = String(toHour).padStart(2, '0') + ':00';
                 slots.push({
                     value: `${from} - ${to}`,
                     text: `${from} - ${to}`
@@ -416,18 +623,21 @@
             return slots.map(slot => `<option value="${slot.value}">${slot.text}</option>`).join('');
         }
         
-        // Pre-generate time slots for performance
+        // Pre-generate time slots for performance optimization
         const twoHourSlotOptionsHtml = generate2HourSlots();
 
         /**
          * Gets and normalizes order data from URL parameters
-         * @returns {Array} Array of normalized order objects
+         * Handles backward compatibility with different field naming conventions
+         * @returns {Array<Object>} Array of normalized order objects
          */
         function getOrdersFromUrl() {
             const params = new URLSearchParams(window.location.search);
             const encodedData = params.get('data');
+            
             try {
                 if (!encodedData) return [];
+                
                 let jsonString;
                 try {
                     // Try UTF-8 aware base64 decoding first
@@ -441,12 +651,15 @@
                         jsonString = decodeURIComponent(encodedData);
                     }
                 }
+                
                 const parsedData = JSON.parse(jsonString);
                 const ordersArray = Array.isArray(parsedData) ? parsedData : [parsedData];
+                
                 return ordersArray.map(order => {
                     // Note: Handle 'Depature' typo in source data for backward compatibility
                     const departure = order.Departure || order.departure || order.Depature || 'N/A';
                     const destination = order.Destination || order.destination || 'N/A';
+                    
                     return {
                         orderId: order.OrderID || order.orderId,
                         supplier: order.SupplierName || order.supplier,
@@ -478,10 +691,12 @@
             const alertContainer = DOM_CACHE.loginAlert || document.getElementById('login-alert');
             const validType = validateAlertType(type);
             const escapedMessage = escapeHtml(message);
-            alertContainer.innerHTML = `<div class="alert alert-${validType} alert-dismissible fade show" role="alert">
-                                            ${escapedMessage}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>`;
+            
+            alertContainer.innerHTML = `
+                <div class="alert alert-${validType} alert-dismissible fade show" role="alert">
+                    ${escapedMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
+                </div>`;
         }
 
         /**
@@ -493,14 +708,16 @@
             const alertContainer = DOM_CACHE.alertContainer || document.getElementById('alert-container');
             const validType = validateAlertType(type);
             const escapedMessage = escapeHtml(message);
-            alertContainer.innerHTML = `<div class="alert alert-${validType} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
-                                            ${escapedMessage}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>`;
+            
+            alertContainer.innerHTML = `
+                <div class="alert alert-${validType} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
+                    ${escapedMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Schließen"></button>
+                </div>`;
         }
 
         /**
-         * Creates HTML for a single delivery card
+         * Creates HTML for a single delivery card with all form fields
          * @param {Object} order - Order data object
          * @returns {string} HTML string for the order card
          */
@@ -516,75 +733,125 @@
             }).join('');
 
             return `
-                <div class="order-card" data-order-id="${id}">
-                    <h5>
-                        <span>${escapeHtml(order.route ? order.route : '')}</span>
+                <article class="order-card" data-order-id="${id}" role="region" aria-labelledby="order-title-${id}">
+                    <h2 id="order-title-${id}" class="h5">
+                        <span>${escapeHtml(order.route || '')}</span>
                         <span class="order-id-badge">Auftrag-ID: ${escapeHtml(order.orderId || 'UNKNOWN')}</span>
-                    </h5>
-                    <div class="row g-3 mb-3">
-                        <!-- Anzeigen nicht ändern -->
-                        <div class="col-md-4 mb-1">
-                            <label class="readonly-label">Dienstleister</label>
-                            <span class="readonly-data">${escapeHtml(order.supplier || 'N/A')}</span>
-                        </div>
-                        <div class="col-md-4 mb-1">
-                            <label class="readonly-label">KW</label>
-                            <span class="readonly-data">${escapeHtml(order.cw || 'N/A')}</span>
-                        </div>
-                        <div class="col-md-4 mb-1">
-                            <label class="readonly-label">Soll-Transportdatum</label>
-                            <span class="readonly-data">${escapeHtml(order.dlTransportdate || 'N/A')}</span>
-                        </div>
-                    </div>
-                    <hr class="my-2">
-                    <!-- Anzeigen und Änderungen eingeben -->
-                    <div class="row g-3">
-                        <!-- Lieferdetails Gruppe -->
-                        <div class="col-md-4">
-                            <label for="delivered-wagons-${id}" class="form-label">Gelieferte Waggons</label>
-                            <input type="number" class="form-control" id="delivered-wagons-${id}" name="delivered-wagons-${id}" min="0" max="9999" value="${escapeHtml(String(order.deliveredWagons || ''))}" required aria-required="true">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="delivered-transport-date-${id}" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Dieses Datum ggf. am Empfangsort eintragen">Ist-Transportdatum</label>
-                            <input type="date" class="form-control" id="delivered-transport-date-${id}" name="delivered-transport-date-${id}" value="${escapeHtml(convertDateToISO(order.dlTransportdate || ''))}" aria-label="Ist-Transportdatum">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="delivery-time-slot-${id}" class="form-label">Lieferzeit-Slot (2h)</label>
-                            <select class="form-select" id="delivery-time-slot-${id}" name="delivery-time-slot-${id}" aria-label="Lieferzeit-Slot wählen">
-                                ${twoHourSlotOptionsHtml}
-                            </select>
+                    </h2>
+                    
+                    <fieldset class="border-0 p-0">
+                        <legend class="visually-hidden">Auftragsdetails für ${escapeHtml(order.orderId || 'UNKNOWN')}</legend>
+                        
+                        <div class="row g-3 mb-3">
+                            <!-- Read-only Information -->
+                            <div class="col-md-4 mb-1">
+                                <span class="readonly-label">Dienstleister</span>
+                                <span class="readonly-data">${escapeHtml(order.supplier || 'N/A')}</span>
+                            </div>
+                            <div class="col-md-4 mb-1">
+                                <span class="readonly-label">KW</span>
+                                <span class="readonly-data">${escapeHtml(order.cw || 'N/A')}</span>
+                            </div>
+                            <div class="col-md-4 mb-1">
+                                <span class="readonly-label">Soll-Transportdatum</span>
+                                <span class="readonly-data">${escapeHtml(order.dlTransportdate || 'N/A')}</span>
+                            </div>
                         </div>
                         
-                        <!-- No Show und Grund Gruppe -->
-                        <div class="col-md-6">
-                            <label for="destination-no-show-${id}" class="form-label">No Show am Empfangsort</label>
-                            <select class="form-select" id="destination-no-show-${id}" name="destination-no-show-${id}" required aria-required="true">
-                                <option value="No">Nein</option>
-                                <option value="Yes">Ja</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="reason-short-destination-${id}" class="form-label">Grund Unterlieferung Empfangsort</label>
-                            <select class="form-select" id="reason-short-destination-${id}" name="reason-short-destination-${id}" aria-label="Grund Unterlieferung wählen">${reasonOpts}</select>
-                        </div>
+                        <hr class="my-2">
                         
-                        <!-- Kommentar Gruppe -->
-                        <div class="col-12">
-                            <label for="destination-comment-${id}" class="form-label">Kommentar Empfangsort</label>
-                            <textarea class="form-control" id="destination-comment-${id}" name="destination-comment-${id}" maxlength="${CONFIG.MAX_COMMENT_LENGTH}" rows="3" aria-label="Kommentar eingeben"></textarea>
+                        <!-- Editable Form Fields -->
+                        <div class="row g-3">
+                            <!-- Delivery Details Group -->
+                            <div class="col-md-4">
+                                <label for="delivered-wagons-${id}" class="form-label">Gelieferte Waggons</label>
+                                <input 
+                                    type="number" 
+                                    class="form-control" 
+                                    id="delivered-wagons-${id}" 
+                                    name="delivered-wagons-${id}" 
+                                    min="0" 
+                                    max="9999" 
+                                    value="${escapeHtml(String(order.deliveredWagons || ''))}" 
+                                    required 
+                                    aria-required="true"
+                                    aria-describedby="delivered-wagons-${id}-hint"
+                                    placeholder="Anzahl eingeben">
+                                <small id="delivered-wagons-${id}-hint" class="form-text">Geben Sie die Anzahl der gelieferten Waggons ein</small>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="delivered-transport-date-${id}" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Dieses Datum ggf. am Empfangsort eintragen">Ist-Transportdatum</label>
+                                <input 
+                                    type="date" 
+                                    class="form-control" 
+                                    id="delivered-transport-date-${id}" 
+                                    name="delivered-transport-date-${id}" 
+                                    value="${escapeHtml(convertDateToISO(order.dlTransportdate || ''))}" 
+                                    aria-label="Ist-Transportdatum">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="delivery-time-slot-${id}" class="form-label">Lieferzeit-Slot (2h)</label>
+                                <select 
+                                    class="form-select" 
+                                    id="delivery-time-slot-${id}" 
+                                    name="delivery-time-slot-${id}" 
+                                    aria-label="Lieferzeit-Slot wählen">
+                                    ${twoHourSlotOptionsHtml}
+                                </select>
+                            </div>
+                            
+                            <!-- No Show and Reason Group -->
+                            <div class="col-md-6">
+                                <label for="destination-no-show-${id}" class="form-label">No Show am Empfangsort</label>
+                                <select 
+                                    class="form-select" 
+                                    id="destination-no-show-${id}" 
+                                    name="destination-no-show-${id}" 
+                                    required 
+                                    aria-required="true">
+                                    <option value="No">Nein</option>
+                                    <option value="Yes">Ja</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="reason-short-destination-${id}" class="form-label">Grund Unterlieferung Empfangsort</label>
+                                <select 
+                                    class="form-select" 
+                                    id="reason-short-destination-${id}" 
+                                    name="reason-short-destination-${id}" 
+                                    aria-label="Grund Unterlieferung wählen">
+                                    ${reasonOpts}
+                                </select>
+                            </div>
+                            
+                            <!-- Comment Group -->
+                            <div class="col-12">
+                                <label for="destination-comment-${id}" class="form-label">Kommentar Empfangsort</label>
+                                <textarea 
+                                    class="form-control" 
+                                    id="destination-comment-${id}" 
+                                    name="destination-comment-${id}" 
+                                    maxlength="${CONFIG.MAX_COMMENT_LENGTH}" 
+                                    rows="3" 
+                                    aria-label="Kommentar eingeben"
+                                    aria-describedby="destination-comment-${id}-hint"
+                                    placeholder="Optional: Zusätzliche Hinweise oder Bemerkungen"></textarea>
+                                <small id="destination-comment-${id}-hint" class="form-text">Maximal ${CONFIG.MAX_COMMENT_LENGTH} Zeichen</small>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                    </fieldset>
+                </article>
             `;
         }
 
         /**
          * Initializes Bootstrap tooltips for the current page
+         * Disposes existing tooltips to prevent memory leaks
          */
         function initializeTooltips() {
             const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.forEach((tooltipTriggerEl) => {
-                // Dispose existing tooltip if any
+                // Dispose existing tooltip if any to prevent memory leaks
                 const existingTooltip = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
                 if (existingTooltip) {
                     existingTooltip.dispose();
@@ -595,6 +862,7 @@
 
         /**
          * Loads and displays order forms from URL data
+         * Uses document fragment for optimal DOM performance
          */
         function loadForm() {
             const ordersData = getOrdersFromUrl();
@@ -611,15 +879,17 @@
                 return;
             }
             
-            // Use document fragment for better performance
+            // Use document fragment for better performance - single reflow instead of multiple
             const fragment = document.createDocumentFragment();
             const tempDiv = document.createElement('div');
+            
             ordersData.forEach(order => {
                 tempDiv.innerHTML = createDeliveryCard(order);
                 while (tempDiv.firstChild) {
                     fragment.appendChild(tempDiv.firstChild);
                 }
             });
+            
             container.innerHTML = '';
             container.appendChild(fragment);
             
@@ -632,11 +902,11 @@
         // ============================================
         
         /**
-         * Makes a fetch request with timeout
+         * Makes a fetch request with timeout to prevent hanging requests
          * @param {string} url - URL to fetch
          * @param {Object} options - Fetch options
          * @param {number} timeout - Timeout in milliseconds
-         * @returns {Promise} Fetch promise with timeout
+         * @returns {Promise<Response>} Fetch promise with timeout
          */
         function fetchWithTimeout(url, options = {}, timeout = CONFIG.REQUEST_TIMEOUT) {
             return Promise.race([
@@ -652,8 +922,9 @@
         // ============================================
         
         /**
-         * Handles login form submission
+         * Handles login form submission with validation and error handling
          * @param {Event} event - Submit event
+         * @returns {Promise<void>}
          */
         async function handleLogin(event) {
             event.preventDefault();
@@ -661,7 +932,7 @@
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
-            // Validate input lengths
+            // Validate input lengths to prevent DoS
             if (!validateInputLength(username, CONFIG.MAX_USERNAME_LENGTH)) {
                 showLoginAlert('Benutzername ist zu lang.', 'danger');
                 return;
@@ -675,6 +946,7 @@
             const loginBtnText = document.getElementById('login-btn-text');
             const loginSpinner = document.getElementById('login-spinner');
             
+            // Update UI to show loading state
             loginBtn.disabled = true;
             loginBtn.classList.add('loading');
             loginBtnText.textContent = 'Überprüfung...';
@@ -700,14 +972,25 @@
                     sessionToken = result.token || null;
                     DOM_CACHE.loginScreen.classList.add('hidden');
                     DOM_CACHE.mainApp.classList.remove('hidden');
+                    
+                    // Set focus to main content for screen readers
+                    const mainContent = document.getElementById('main-content');
+                    if (mainContent) {
+                        mainContent.focus();
+                    }
+                    
                     loadForm();
                 } else {
                     showLoginAlert('Ungültiger Benutzername oder Passwort. Bitte versuchen Sie es erneut.', 'danger');
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                showLoginAlert('Verbindungsfehler. Bitte versuchen Sie es später erneut.', 'danger');
+                const errorMessage = error.message === 'Request timeout' 
+                    ? 'Die Anfrage hat zu lange gedauert. Bitte versuchen Sie es erneut.' 
+                    : 'Verbindungsfehler. Bitte versuchen Sie es später erneut.';
+                showLoginAlert(errorMessage, 'danger');
             } finally {
+                // Reset button state
                 loginBtn.disabled = false;
                 loginBtn.classList.remove('loading');
                 loginBtnText.textContent = 'Anmelden';
@@ -716,11 +999,17 @@
         }
 
         /**
-         * Handles delivery form submission
+         * Handles delivery form submission with comprehensive validation
          * @param {Event} event - Submit event
+         * @returns {Promise<void>}
          */
         async function handleDeliverySubmit(event) {
             event.preventDefault();
+            
+            // Show confirmation dialog before submitting
+            if (!confirm('Möchten Sie die Transportbestätigung wirklich absenden? Diese Aktion kann nicht rückgängig gemacht werden.')) {
+                return;
+            }
             
             const deliveryData = [];
             const cards = document.querySelectorAll('.order-card');
@@ -743,6 +1032,9 @@
                 // Clear any previous custom validity
                 deliveredWagonsEl.setCustomValidity('');
                 
+                const commentEl = document.getElementById(`destination-comment-${id}`);
+                const comment = commentEl.value.substring(0, CONFIG.MAX_COMMENT_LENGTH);
+                
                 deliveryData.push({
                     orderId: id,
                     deliveredWagons: deliveredWagons,
@@ -750,7 +1042,7 @@
                     deliveryTimeSlot: document.getElementById(`delivery-time-slot-${id}`).value,
                     deliveredDestinationNoShow: document.getElementById(`destination-no-show-${id}`).value === "Yes",
                     reasonShortDeliveryDestination: document.getElementById(`reason-short-destination-${id}`).value,
-                    destinationComment: document.getElementById(`destination-comment-${id}`).value.substring(0, CONFIG.MAX_COMMENT_LENGTH),
+                    destinationComment: comment,
                 });
             });
             
@@ -770,6 +1062,7 @@
             submitBtn.classList.add('loading');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Wird übermittelt...';
+            submitBtn.setAttribute('aria-busy', 'true');
 
             try {
                 const response = await fetchWithTimeout(CONFIG.ORDER_SUBMIT_URL, {
@@ -783,19 +1076,25 @@
                 
                 if (response.ok) {
                     showAlert('Erfolg! Die Lieferungen wurden bestätigt und übermittelt.', 'success');
-                    // Keep button disabled after successful submission
+                    // Keep button disabled after successful submission to prevent duplicate submissions
+                    submitBtn.textContent = 'Erfolgreich gesendet ✓';
                 } else {
-                    showAlert(`Übermittlung fehlgeschlagen. Server-Status: ${response.status}.`, 'danger');
+                    const errorText = await response.text().catch(() => 'Keine Details verfügbar');
+                    showAlert(`Übermittlung fehlgeschlagen. Server-Status: ${response.status}. ${errorText}`, 'danger');
                     submitBtn.disabled = false;
                     submitBtn.textContent = originalText;
                 }
             } catch (error) {
                 console.error('Submission error:', error);
-                showAlert('Ein Fehler ist aufgetreten. Bitte prüfen Sie Ihre Verbindung oder wenden Sie sich an den Support.', 'danger');
+                const errorMessage = error.message === 'Request timeout'
+                    ? 'Die Übermittlung hat zu lange gedauert. Bitte überprüfen Sie Ihre Verbindung und versuchen Sie es erneut.'
+                    : 'Ein Fehler ist aufgetreten. Bitte prüfen Sie Ihre Verbindung oder wenden Sie sich an den Support.';
+                showAlert(errorMessage, 'danger');
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
             } finally {
                 submitBtn.classList.remove('loading');
+                submitBtn.setAttribute('aria-busy', 'false');
             }
         }
 
@@ -805,8 +1104,9 @@
         
         /**
          * Initializes the application when DOM is ready
+         * Sets up event listeners and caches DOM elements
          */
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             // Cache DOM elements for better performance
             DOM_CACHE.loginScreen = document.getElementById('login-screen');
             DOM_CACHE.mainApp = document.getElementById('main-app');
@@ -819,6 +1119,9 @@
             // Register event handlers
             DOM_CACHE.loginForm.addEventListener('submit', handleLogin);
             DOM_CACHE.deliveryForm.addEventListener('submit', handleDeliverySubmit);
+            
+            // Log application initialization for debugging
+            console.log('BMW Transport Confirmation Application initialized');
         });
     </script>
 </body>
