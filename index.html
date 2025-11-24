@@ -3,52 +3,81 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="BMW Transport Confirmation Application">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://upload.wikimedia.org data:; connect-src 'self' https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com https://cdn.jsdelivr.net; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
     <title>Empfangsort: Transportbestätigung</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- DNS Prefetch and Preconnect for Performance -->
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//upload.wikimedia.org">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Stylesheets -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Base styles with performance optimizations */
         body {
             min-height: 100vh;
             background-color: #f4f7fa;
             font-family: 'Montserrat', sans-serif;
+            /* Enable hardware acceleration */
+            transform: translateZ(0);
+            backface-visibility: hidden;
         }
+        
+        /* Header and card styles - using efficient selectors */
         .header-section {
             background-color: #00002d;
             color: white;
             padding: 40px;
             border-radius: 12px 12px 0 0;
         }
+        
         .header-section h1 {
             font-weight: 700;
             font-size: 2.2rem;
         }
-        .main-card {
+        
+        .main-card, .login-card {
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             margin: 40px auto;
+        }
+        
+        .main-card {
             max-width: 900px;
         }
+        
         .login-card {
-            background-color: #ffffff;
-            border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             margin: 100px auto;
             max-width: 450px;
             padding: 40px;
         }
+        
         .login-header {
             text-align: center;
             margin-bottom: 30px;
         }
+        
         .login-header h2 {
             color: #00002d;
             font-weight: 700;
             margin-bottom: 10px;
         }
+        
         .login-header p {
             color: #6b7280;
         }
+        
+        /* Form styles - combined selectors for efficiency */
         .form-control, .form-select {
             background-color: #f0f3f8;
             border: 1px solid #d1d5db;
@@ -57,11 +86,23 @@
             font-size: 1rem;
             height: 44px;
         }
+        
         .form-label {
             font-weight: 600;
             color: #00002d;
             margin-bottom: 5px;
         }
+        
+        .form-text {
+            font-size: 0.92em;
+        }
+        
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        /* Order card styles */
         .order-card {
             border: 1px solid #e5e7eb;
             border-left: 5px solid #3b82f6;
@@ -69,65 +110,22 @@
             margin-bottom: 20px;
             padding: 22px 22px 10px 22px;
             background-color: #ffffff;
+            /* Use transform for better performance */
+            will-change: transform;
         }
+        
         .order-card h5 {
             font-weight: 700;
             color: #3b82f6;
             margin-bottom: 10px;
             border-bottom: 2px solid #f0f3f8;
             padding-bottom: 5px;
-        }
-        .btn-custom {
-            background-color: #3b82f6;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-            padding: 10px 30px;
-            border: none;
-            transition: background-color 0.3s ease;
-        }
-        .btn-custom:hover {
-            background-color: #1e3a8a;
-            color: white;
-        }
-        .hidden {
-            display: none !important;
-        }
-        .spinner-border-sm {
-            width: 1rem;
-            height: 1rem;
-            margin-right: 0.5rem;
-        }
-        .readonly-label {
-            display: block;
-            font-weight: 500;
-            color: #767676;
-        }
-        .readonly-data {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 1.1rem;
-            margin-bottom: 13px;
-        }
-        .form-text {
-            font-size: 0.92em;
-        }
-        /* Tooltip styling */
-        [data-bs-toggle="tooltip"] {
-            cursor: help;
-        }
-        /* Larger textarea for comments */
-        textarea.form-control {
-            min-height: 80px;
-            resize: vertical;
-        }
-        /* Order header styling */
-        .order-card h5 {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
         }
+        
         .order-id-badge {
             background-color: #dbeafe;
             color: #1e40af;
@@ -137,6 +135,70 @@
             font-weight: 600;
             margin-left: 10px;
         }
+        
+        /* Button styles with GPU acceleration */
+        .btn-custom {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 10px 30px;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            will-change: background-color;
+        }
+        
+        .btn-custom:hover {
+            background-color: #1e3a8a;
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .btn-custom:active {
+            transform: translateY(0);
+        }
+        
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+        }
+        
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+        }
+        
+        .readonly-label {
+            display: block;
+            font-weight: 500;
+            color: #767676;
+        }
+        
+        .readonly-data {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 1.1rem;
+            margin-bottom: 13px;
+        }
+        
+        /* Accessibility and interaction improvements */
+        [data-bs-toggle="tooltip"] {
+            cursor: help;
+        }
+        
+        /* Focus styles for accessibility */
+        .form-control:focus, .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+            outline: none;
+        }
+        
+        /* Loading state optimization */
+        .loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
@@ -144,22 +206,24 @@
     <div id="login-screen" class="container">
         <div class="login-card">
             <div class="login-header">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 60px; margin-bottom: 20px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" width="60" height="60" loading="eager" decoding="async" style="margin-bottom: 20px;">
                 <h2>Anmeldung erforderlich</h2>
                 <p>Bitte melden Sie sich an, um auf die Transportaufträge zuzugreifen.</p>
             </div>
-            <form id="login-form">
+            <form id="login-form" novalidate>
                 <div class="mb-3">
                     <label for="username" class="form-label">Benutzername</label>
-                    <input type="text" class="form-control" id="username" name="username" required autocomplete="username">
+                    <input type="text" class="form-control" id="username" name="username" required autocomplete="username" aria-required="true" minlength="2" maxlength="100">
+                    <div class="invalid-feedback">Bitte geben Sie einen Benutzernamen ein.</div>
                 </div>
                 <div class="mb-4">
                     <label for="password" class="form-label">Passwort</label>
-                    <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password">
+                    <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password" aria-required="true" minlength="4" maxlength="100">
+                    <div class="invalid-feedback">Bitte geben Sie ein Passwort ein.</div>
                 </div>
-                <div id="login-alert" class="mb-3"></div>
+                <div id="login-alert" class="mb-3" role="alert" aria-live="polite"></div>
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-custom" id="login-btn">
+                    <button type="submit" class="btn btn-custom" id="login-btn" aria-label="Anmelden">
                         <span id="login-btn-text">Anmelden</span>
                         <span id="login-spinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
                     </button>
@@ -172,34 +236,52 @@
     <div id="main-app" class="container hidden">
         <div class="main-card">
             <div class="header-section text-center">
-                <h1>Transportbestätigung durch Empfangsort <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" style="height: 1.2em; vertical-align: middle;"></h1>
+                <h1>Transportbestätigung durch Empfangsort <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" width="42" height="42" loading="lazy" decoding="async" style="vertical-align: middle;"></h1>
                 <p class="lead" style="color: #dbeafe;">
                   Bitte bestätigen Sie als Empfangsort die empfangenen Werte zu den untenstehenden Transporten.
                 </p>
             </div>
             <div class="p-4">
-                <form id="delivery-form">
+                <form id="delivery-form" novalidate>
                     <div id="orders-container">
-                        <div class="alert alert-info" role="alert">Lade Bestelldaten...</div>
+                        <div class="alert alert-info" role="status" aria-live="polite">Lade Bestelldaten...</div>
                     </div>
-                    <div id="alert-container" class="mt-4"></div>
+                    <div id="alert-container" class="mt-4" role="alert" aria-live="polite"></div>
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-custom mt-3">Bestätigung speichern & an Logistik senden</button>
+                        <button type="submit" class="btn btn-custom mt-3" aria-label="Bestätigung speichern und senden">Bestätigung speichern & an Logistik senden</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous" defer></script>
     <script>
         // ============================================
-        // CONFIGURATION
+        // CONFIGURATION & CONSTANTS
         // ============================================
-        const AUTH_FLOW_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU';
-        const ORDER_SUBMIT_URL = 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c3b6894a81804e10a1040bf9d114ae16/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3k9xRRQyzvzaQPioR6-EuOVGvns-Ap0jE3CYRe4C8Ys';
+        const CONFIG = {
+            AUTH_FLOW_URL: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU',
+            ORDER_SUBMIT_URL: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c3b6894a81804e10a1040bf9d114ae16/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3k9xRRQyzvzaQPioR6-EuOVGvns-Ap0jE3CYRe4C8Ys',
+            REQUEST_TIMEOUT: 30000, // 30 seconds
+            MAX_USERNAME_LENGTH: 100,
+            MAX_PASSWORD_LENGTH: 100,
+            MAX_COMMENT_LENGTH: 500,
+            VALID_ALERT_TYPES: ['success', 'danger', 'warning', 'info']
+        };
         
         let sessionToken = null;
+        
+        // Cache for DOM elements to reduce lookups
+        const DOM_CACHE = {
+            loginScreen: null,
+            mainApp: null,
+            loginForm: null,
+            deliveryForm: null,
+            ordersContainer: null,
+            alertContainer: null,
+            loginAlert: null
+        };
 
         // Reason for short delivery destination options ("Reason Short Delivery Destination")
         const REASON_SHORT_DELIVERY = [
@@ -237,18 +319,88 @@
             { value: '53', text: '53 Fehlende Waggons - falsche Planung Bahn-DL' }
         ];
 
-        function showLoginAlert(message, type) {
-            const alertContainer = document.getElementById('login-alert');
-            // Validate type and escape message to prevent XSS
-            const validType = validateAlertType(type);
-            const escapedMessage = escapeHtml(message);
-            alertContainer.innerHTML = `<div class="alert alert-${validType} alert-dismissible fade show" role="alert">
-                                            ${escapedMessage}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>`;
+        // ============================================
+        // SECURITY & VALIDATION UTILITIES
+        // ============================================
+        
+        /**
+         * Escapes HTML to prevent XSS attacks
+         * @param {string} text - Text to escape
+         * @returns {string} Escaped HTML string
+         */
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
-        // Generate 2-hour time slots as options (00:00-02:00, ..., 22:00-00:00)
+        /**
+         * Validates alert type to prevent CSS class injection
+         * @param {string} type - Alert type to validate
+         * @returns {string} Validated alert type
+         */
+        function validateAlertType(type) {
+            return CONFIG.VALID_ALERT_TYPES.includes(type) ? type : 'info';
+        }
+
+        /**
+         * Sanitizes ID to ensure it only contains safe characters for HTML attributes
+         * Allows alphanumeric characters, dash, underscore, and German umlauts
+         * @param {string} id - ID to sanitize
+         * @returns {string} Sanitized ID
+         */
+        function sanitizeId(id) {
+            // Remove any characters that are not alphanumeric, dash, underscore, or German umlauts
+            // Specifically supports: a-z, A-Z, 0-9, -, _, ä, ö, ü, Ä, Ö, Ü, ß
+            // Note: HTML5 supports non-ASCII characters in IDs
+            return String(id).replace(/[^a-zA-Z0-9\-_äöüÄÖÜß]/g, '');
+        }
+        
+        /**
+         * Validates input length to prevent DoS attacks
+         * @param {string} input - Input to validate
+         * @param {number} maxLength - Maximum allowed length
+         * @returns {boolean} Whether input is valid
+         */
+        function validateInputLength(input, maxLength) {
+            return input && input.length <= maxLength;
+        }
+
+        // ============================================
+        // DATA PROCESSING UTILITIES
+        // ============================================
+        
+        /**
+         * UTF-8 aware base64 decoding
+         * @param {string} str - Base64 encoded string
+         * @returns {string} Decoded string
+         */
+        function base64DecodeUnicode(str) {
+            // Convert base64 to percent-encoding, then decode
+            return decodeURIComponent(atob(str).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        }
+
+        /**
+         * Converts date from DD.MM.YYYY format to YYYY-MM-DD (ISO format)
+         * @param {string} dateStr - Date string in DD.MM.YYYY format
+         * @returns {string} Date in ISO format
+         */
+        function convertDateToISO(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('.');
+            if (parts.length === 3) {
+                const [day, month, year] = parts;
+                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            }
+            return dateStr;
+        }
+
+        /**
+         * Generates 2-hour time slots as HTML options (00:00-02:00, ..., 22:00-00:00)
+         * @returns {string} HTML options string
+         */
         function generate2HourSlots() {
             const slots = [];
             for (let h = 0; h < 24; h += 2) {
@@ -260,51 +412,17 @@
                     text: `${from} - ${to}`
                 });
             }
+            // Time slots are generated from controlled numeric values, no escaping needed
             return slots.map(slot => `<option value="${slot.value}">${slot.text}</option>`).join('');
         }
+        
+        // Pre-generate time slots for performance
         const twoHourSlotOptionsHtml = generate2HourSlots();
 
-        // Escape HTML to prevent XSS attacks
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        // Validate alert type to prevent CSS class injection
-        function validateAlertType(type) {
-            const validTypes = ['success', 'danger', 'warning', 'info'];
-            return validTypes.includes(type) ? type : 'info';
-        }
-
-        // Sanitize ID to ensure it only contains safe characters for HTML attributes
-        function sanitizeId(id) {
-            // Remove any characters that are not alphanumeric (including German umlauts), dash, or underscore
-            // Allow ä, ö, ü, Ä, Ö, Ü, ß and other common European characters
-            // Note: HTML5 supports non-ASCII characters in IDs. This is necessary for proper German text support.
-            return String(id).replace(/[^a-zA-Z0-9\-_äöüÄÖÜß]/g, '');
-        }
-
-        // UTF-8 aware base64 decoding
-        function base64DecodeUnicode(str) {
-            // Convert base64 to percent-encoding, then decode
-            return decodeURIComponent(atob(str).split('').map(function(c) {
-                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-            }).join(''));
-        }
-
-        // Convert date from DD.MM.YYYY format to YYYY-MM-DD (ISO format)
-        function convertDateToISO(dateStr) {
-            if (!dateStr) return '';
-            const parts = dateStr.split('.');
-            if (parts.length === 3) {
-                const [day, month, year] = parts;
-                return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-            }
-            return dateStr;
-        }
-
-        // Get/normalize order data from URL
+        /**
+         * Gets and normalizes order data from URL parameters
+         * @returns {Array} Array of normalized order objects
+         */
         function getOrdersFromUrl() {
             const params = new URLSearchParams(window.location.search);
             const encodedData = params.get('data');
@@ -342,10 +460,50 @@
                     };
                 });
             } catch (e) {
+                console.error('Error parsing order data:', e);
                 return [];
             }
         }
 
+        // ============================================
+        // UI UTILITIES
+        // ============================================
+        
+        /**
+         * Displays an alert message in the login screen
+         * @param {string} message - Message to display
+         * @param {string} type - Alert type (success, danger, warning, info)
+         */
+        function showLoginAlert(message, type) {
+            const alertContainer = DOM_CACHE.loginAlert || document.getElementById('login-alert');
+            const validType = validateAlertType(type);
+            const escapedMessage = escapeHtml(message);
+            alertContainer.innerHTML = `<div class="alert alert-${validType} alert-dismissible fade show" role="alert">
+                                            ${escapedMessage}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
+        }
+
+        /**
+         * Displays an alert message in the main application
+         * @param {string} message - Message to display
+         * @param {string} type - Alert type (success, danger, warning, info)
+         */
+        function showAlert(message, type) {
+            const alertContainer = DOM_CACHE.alertContainer || document.getElementById('alert-container');
+            const validType = validateAlertType(type);
+            const escapedMessage = escapeHtml(message);
+            alertContainer.innerHTML = `<div class="alert alert-${validType} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
+                                            ${escapedMessage}
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>`;
+        }
+
+        /**
+         * Creates HTML for a single delivery card
+         * @param {Object} order - Order data object
+         * @returns {string} HTML string for the order card
+         */
         function createDeliveryCard(order) {
             const id = sanitizeId(order.orderId || 'UNKNOWN');
             
@@ -384,15 +542,15 @@
                         <!-- Lieferdetails Gruppe -->
                         <div class="col-md-4">
                             <label for="delivered-wagons-${id}" class="form-label">Gelieferte Waggons</label>
-                            <input type="number" class="form-control" id="delivered-wagons-${id}" name="delivered-wagons-${id}" min="0" value="${escapeHtml(String(order.deliveredWagons || ''))}" required>
+                            <input type="number" class="form-control" id="delivered-wagons-${id}" name="delivered-wagons-${id}" min="0" max="9999" value="${escapeHtml(String(order.deliveredWagons || ''))}" required aria-required="true">
                         </div>
                         <div class="col-md-4">
                             <label for="delivered-transport-date-${id}" class="form-label" data-bs-toggle="tooltip" data-bs-placement="top" title="Dieses Datum ggf. am Empfangsort eintragen">Ist-Transportdatum</label>
-                            <input type="date" class="form-control" id="delivered-transport-date-${id}" name="delivered-transport-date-${id}" value="${escapeHtml(convertDateToISO(order.dlTransportdate || ''))}">
+                            <input type="date" class="form-control" id="delivered-transport-date-${id}" name="delivered-transport-date-${id}" value="${escapeHtml(convertDateToISO(order.dlTransportdate || ''))}" aria-label="Ist-Transportdatum">
                         </div>
                         <div class="col-md-4">
                             <label for="delivery-time-slot-${id}" class="form-label">Lieferzeit-Slot (2h)</label>
-                            <select class="form-select" id="delivery-time-slot-${id}" name="delivery-time-slot-${id}">
+                            <select class="form-select" id="delivery-time-slot-${id}" name="delivery-time-slot-${id}" aria-label="Lieferzeit-Slot wählen">
                                 ${twoHourSlotOptionsHtml}
                             </select>
                         </div>
@@ -400,44 +558,30 @@
                         <!-- No Show und Grund Gruppe -->
                         <div class="col-md-6">
                             <label for="destination-no-show-${id}" class="form-label">No Show am Empfangsort</label>
-                            <select class="form-select" id="destination-no-show-${id}" name="destination-no-show-${id}" required>
+                            <select class="form-select" id="destination-no-show-${id}" name="destination-no-show-${id}" required aria-required="true">
                                 <option value="No">Nein</option>
                                 <option value="Yes">Ja</option>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="reason-short-destination-${id}" class="form-label">Grund Unterlieferung Empfangsort</label>
-                            <select class="form-select" id="reason-short-destination-${id}" name="reason-short-destination-${id}">${reasonOpts}</select>
+                            <select class="form-select" id="reason-short-destination-${id}" name="reason-short-destination-${id}" aria-label="Grund Unterlieferung wählen">${reasonOpts}</select>
                         </div>
                         
                         <!-- Kommentar Gruppe -->
                         <div class="col-12">
                             <label for="destination-comment-${id}" class="form-label">Kommentar Empfangsort</label>
-                            <textarea class="form-control" id="destination-comment-${id}" name="destination-comment-${id}" maxlength="500" rows="3"></textarea>
+                            <textarea class="form-control" id="destination-comment-${id}" name="destination-comment-${id}" maxlength="${CONFIG.MAX_COMMENT_LENGTH}" rows="3" aria-label="Kommentar eingeben"></textarea>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        function loadForm() {
-            const ordersData = getOrdersFromUrl();
-            const container = document.getElementById('orders-container');
-            container.innerHTML = '';
-            if (ordersData.length === 0) {
-                container.innerHTML = `
-                    <div class="alert alert-danger" role="alert">
-                        <strong>Fehler:</strong> Es wurden keine Bestelldaten übergeben oder die Daten konnten nicht geladen werden.<br><br>
-                        Bitte wenden Sie sich an das Logistik-Team oder überprüfen Sie den Link.
-                    </div>`;
-                const submitBtn = document.querySelector('#delivery-form button[type="submit"]');
-                if (submitBtn) submitBtn.disabled = true;
-                return;
-            }
-            ordersData.forEach(order => {
-                container.innerHTML += createDeliveryCard(order);
-            });
-            // Initialize Bootstrap tooltips (dispose any existing ones first)
+        /**
+         * Initializes Bootstrap tooltips for the current page
+         */
+        function initializeTooltips() {
             const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             tooltipTriggerList.forEach((tooltipTriggerEl) => {
                 // Dispose existing tooltip if any
@@ -449,99 +593,232 @@
             });
         }
 
-        function showAlert(message, type) {
-            const alertContainer = document.getElementById('alert-container');
-            // Validate type and escape message to prevent XSS
-            const validType = validateAlertType(type);
-            const escapedMessage = escapeHtml(message);
-            alertContainer.innerHTML = `<div class="alert alert-${validType} alert-dismissible fade show" role="alert" style="font-size: 1rem;">
-                                            ${escapedMessage}
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                        </div>`;
+        /**
+         * Loads and displays order forms from URL data
+         */
+        function loadForm() {
+            const ordersData = getOrdersFromUrl();
+            const container = DOM_CACHE.ordersContainer || document.getElementById('orders-container');
+            
+            if (ordersData.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-danger" role="alert">
+                        <strong>Fehler:</strong> Es wurden keine Bestelldaten übergeben oder die Daten konnten nicht geladen werden.<br><br>
+                        Bitte wenden Sie sich an das Logistik-Team oder überprüfen Sie den Link.
+                    </div>`;
+                const submitBtn = document.querySelector('#delivery-form button[type="submit"]');
+                if (submitBtn) submitBtn.disabled = true;
+                return;
+            }
+            
+            // Use document fragment for better performance
+            const fragment = document.createDocumentFragment();
+            const tempDiv = document.createElement('div');
+            ordersData.forEach(order => {
+                tempDiv.innerHTML = createDeliveryCard(order);
+                while (tempDiv.firstChild) {
+                    fragment.appendChild(tempDiv.firstChild);
+                }
+            });
+            container.innerHTML = '';
+            container.appendChild(fragment);
+            
+            // Initialize Bootstrap tooltips
+            initializeTooltips();
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Handle Login
-            document.getElementById('login-form').addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value;
-                const loginBtn = document.getElementById('login-btn');
-                const loginBtnText = document.getElementById('login-btn-text');
-                const loginSpinner = document.getElementById('login-spinner');
-                loginBtn.disabled = true;
-                loginBtnText.textContent = 'Überprüfung...';
-                loginSpinner.classList.remove('hidden');
-                try {
-                    const response = await fetch(AUTH_FLOW_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            username: username,
-                            password: password,
-                            timestamp: new Date().toISOString()
-                        })
-                    });
-                    const result = await response.json();
-                    if (response.ok && result.authenticated === true) {
-                        sessionToken = result.token || null;
-                        document.getElementById('login-screen').classList.add('hidden');
-                        document.getElementById('main-app').classList.remove('hidden');
-                        loadForm();
-                    } else {
-                        showLoginAlert('Ungültiger Benutzername oder Passwort. Bitte versuchen Sie es erneut.', 'danger');
-                        loginBtn.disabled = false;
-                        loginBtnText.textContent = 'Anmelden';
-                        loginSpinner.classList.add('hidden');
-                    }
-                } catch (error) {
-                    showLoginAlert('Verbindungsfehler. Bitte versuchen Sie es später erneut.', 'danger');
-                    loginBtn.disabled = false;
-                    loginBtnText.textContent = 'Anmelden';
-                    loginSpinner.classList.add('hidden');
-                }
-            });
+        // ============================================
+        // API UTILITIES
+        // ============================================
+        
+        /**
+         * Makes a fetch request with timeout
+         * @param {string} url - URL to fetch
+         * @param {Object} options - Fetch options
+         * @param {number} timeout - Timeout in milliseconds
+         * @returns {Promise} Fetch promise with timeout
+         */
+        function fetchWithTimeout(url, options = {}, timeout = CONFIG.REQUEST_TIMEOUT) {
+            return Promise.race([
+                fetch(url, options),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Request timeout')), timeout)
+                )
+            ]);
+        }
 
-            // Handle Delivery Form Submission
-            document.getElementById('delivery-form').addEventListener('submit', async function(event) {
-                event.preventDefault();
-                const deliveryData = [];
-                const cards = document.querySelectorAll('.order-card');
-                cards.forEach(card => {
-                    const id = card.getAttribute('data-order-id');
-                    deliveryData.push({
-                        orderId: id,
-                        deliveredWagons: parseInt(document.getElementById(`delivered-wagons-${id}`).value, 10),
-                        deliveredTransportDate: document.getElementById(`delivered-transport-date-${id}`).value,
-                        deliveryTimeSlot: document.getElementById(`delivery-time-slot-${id}`).value,
-                        deliveredDestinationNoShow: document.getElementById(`destination-no-show-${id}`).value === "Yes",
-                        reasonShortDeliveryDestination: document.getElementById(`reason-short-destination-${id}`).value,
-                        destinationComment: document.getElementById(`destination-comment-${id}`).value,
-                    });
+        // ============================================
+        // EVENT HANDLERS
+        // ============================================
+        
+        /**
+         * Handles login form submission
+         * @param {Event} event - Submit event
+         */
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Validate input lengths
+            if (!validateInputLength(username, CONFIG.MAX_USERNAME_LENGTH)) {
+                showLoginAlert('Benutzername ist zu lang.', 'danger');
+                return;
+            }
+            if (!validateInputLength(password, CONFIG.MAX_PASSWORD_LENGTH)) {
+                showLoginAlert('Passwort ist zu lang.', 'danger');
+                return;
+            }
+            
+            const loginBtn = document.getElementById('login-btn');
+            const loginBtnText = document.getElementById('login-btn-text');
+            const loginSpinner = document.getElementById('login-spinner');
+            
+            loginBtn.disabled = true;
+            loginBtn.classList.add('loading');
+            loginBtnText.textContent = 'Überprüfung...';
+            loginSpinner.classList.remove('hidden');
+            
+            try {
+                const response = await fetchWithTimeout(CONFIG.AUTH_FLOW_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password,
+                        timestamp: new Date().toISOString()
+                    })
                 });
-
-                const payload = {
-                    submissionTimestamp: new Date().toISOString(),
-                    sessionToken: sessionToken,
-                    deliveries: deliveryData
-                };
-
-                try {
-                    const response = await fetch(ORDER_SUBMIT_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (response.ok) {
-                        showAlert('Erfolg! Die Lieferungen wurden bestätigt und übermittelt.', 'success');
-                        document.getElementById('delivery-form').querySelector('button[type="submit"]').disabled = true;
-                    } else {
-                        showAlert(`Übermittlung fehlgeschlagen. Server-Status: ${response.status}.`, 'danger');
-                    }
-                } catch (error) {
-                    showAlert('Ein Fehler ist aufgetreten. Bitte prüfen Sie Ihre Verbindung oder wenden Sie sich an den Support.', 'danger');
+                
+                const result = await response.json();
+                
+                if (response.ok && result.authenticated === true) {
+                    sessionToken = result.token || null;
+                    DOM_CACHE.loginScreen.classList.add('hidden');
+                    DOM_CACHE.mainApp.classList.remove('hidden');
+                    loadForm();
+                } else {
+                    showLoginAlert('Ungültiger Benutzername oder Passwort. Bitte versuchen Sie es erneut.', 'danger');
                 }
+            } catch (error) {
+                console.error('Login error:', error);
+                showLoginAlert('Verbindungsfehler. Bitte versuchen Sie es später erneut.', 'danger');
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.classList.remove('loading');
+                loginBtnText.textContent = 'Anmelden';
+                loginSpinner.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Handles delivery form submission
+         * @param {Event} event - Submit event
+         */
+        async function handleDeliverySubmit(event) {
+            event.preventDefault();
+            
+            const deliveryData = [];
+            const cards = document.querySelectorAll('.order-card');
+            let hasValidationError = false;
+            
+            // Collect and validate data from all order cards
+            cards.forEach(card => {
+                const id = card.getAttribute('data-order-id');
+                const deliveredWagonsEl = document.getElementById(`delivered-wagons-${id}`);
+                const deliveredWagons = parseInt(deliveredWagonsEl.value, 10);
+                
+                // Validate number input
+                if (isNaN(deliveredWagons) || deliveredWagons < 0) {
+                    deliveredWagonsEl.setCustomValidity('Bitte geben Sie eine gültige Anzahl ein.');
+                    deliveredWagonsEl.reportValidity();
+                    hasValidationError = true;
+                    return;
+                }
+                
+                // Clear any previous custom validity
+                deliveredWagonsEl.setCustomValidity('');
+                
+                deliveryData.push({
+                    orderId: id,
+                    deliveredWagons: deliveredWagons,
+                    deliveredTransportDate: document.getElementById(`delivered-transport-date-${id}`).value,
+                    deliveryTimeSlot: document.getElementById(`delivery-time-slot-${id}`).value,
+                    deliveredDestinationNoShow: document.getElementById(`destination-no-show-${id}`).value === "Yes",
+                    reasonShortDeliveryDestination: document.getElementById(`reason-short-destination-${id}`).value,
+                    destinationComment: document.getElementById(`destination-comment-${id}`).value.substring(0, CONFIG.MAX_COMMENT_LENGTH),
+                });
             });
+            
+            // Stop submission if validation failed
+            if (hasValidationError) {
+                return;
+            }
+
+            const payload = {
+                submissionTimestamp: new Date().toISOString(),
+                sessionToken: sessionToken,
+                deliveries: deliveryData
+            };
+
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Wird übermittelt...';
+
+            try {
+                const response = await fetchWithTimeout(CONFIG.ORDER_SUBMIT_URL, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    showAlert('Erfolg! Die Lieferungen wurden bestätigt und übermittelt.', 'success');
+                    // Keep button disabled after successful submission
+                } else {
+                    showAlert(`Übermittlung fehlgeschlagen. Server-Status: ${response.status}.`, 'danger');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                showAlert('Ein Fehler ist aufgetreten. Bitte prüfen Sie Ihre Verbindung oder wenden Sie sich an den Support.', 'danger');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            } finally {
+                submitBtn.classList.remove('loading');
+            }
+        }
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        /**
+         * Initializes the application when DOM is ready
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cache DOM elements for better performance
+            DOM_CACHE.loginScreen = document.getElementById('login-screen');
+            DOM_CACHE.mainApp = document.getElementById('main-app');
+            DOM_CACHE.loginForm = document.getElementById('login-form');
+            DOM_CACHE.deliveryForm = document.getElementById('delivery-form');
+            DOM_CACHE.ordersContainer = document.getElementById('orders-container');
+            DOM_CACHE.alertContainer = document.getElementById('alert-container');
+            DOM_CACHE.loginAlert = document.getElementById('login-alert');
+            
+            // Register event handlers
+            DOM_CACHE.loginForm.addEventListener('submit', handleLogin);
+            DOM_CACHE.deliveryForm.addEventListener('submit', handleDeliverySubmit);
         });
     </script>
 </body>
