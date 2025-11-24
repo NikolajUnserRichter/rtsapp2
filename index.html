@@ -108,7 +108,7 @@
             border-left: 5px solid #3b82f6;
             border-radius: 8px;
             margin-bottom: 20px;
-            padding: 22px 22px 10px;
+            padding: 22px 22px 10px 22px;
             background-color: #ffffff;
             /* Use transform for better performance */
             will-change: transform;
@@ -345,13 +345,14 @@
 
         /**
          * Sanitizes ID to ensure it only contains safe characters for HTML attributes
+         * Allows alphanumeric characters, dash, underscore, and German umlauts
          * @param {string} id - ID to sanitize
          * @returns {string} Sanitized ID
          */
         function sanitizeId(id) {
-            // Remove any characters that are not alphanumeric (including German umlauts), dash, or underscore
-            // Allow ä, ö, ü, Ä, Ö, Ü, ß and other common European characters
-            // Note: HTML5 supports non-ASCII characters in IDs. This is necessary for proper German text support.
+            // Remove any characters that are not alphanumeric, dash, underscore, or German umlauts
+            // Specifically supports: a-z, A-Z, 0-9, -, _, ä, ö, ü, Ä, Ö, Ü, ß
+            // Note: HTML5 supports non-ASCII characters in IDs
             return String(id).replace(/[^a-zA-Z0-9\-_äöüÄÖÜß]/g, '');
         }
         
