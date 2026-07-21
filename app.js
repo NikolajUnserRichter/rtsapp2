@@ -10,7 +10,7 @@
  */
 const CONFIG = {
     AUTH_FLOW_URL: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU',
-    ORDER_SUBMIT_URL: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/c3b6894a81804e10a1040bf9d114ae16/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=3k9xRRQyzvzaQPioR6-EuOVGvns-Ap0jE3CYRe4C8Ys',
+    ORDER_SUBMIT_URL: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/680f7172289e436180891d72163c9b59/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=nzN_tqLWUgnt2-WDIJd5YeLiAoygnbXfFDzspNiEyuA',
     REQUEST_TIMEOUT: 30000, // 30 seconds
     MAX_USERNAME_LENGTH: 100,
     MAX_PASSWORD_LENGTH: 100,
