@@ -589,15 +589,86 @@ async function handleLogin(event) {
 }
 
 /**
+ * Shows a custom in-page confirmation modal (avoids the native browser confirm()
+ * dialog, which shows the "<domain> wird Folgendes angezeigt" chrome).
+ * @param {string} message - Confirmation question shown in the body
+ * @param {{title?: string, confirmText?: string, cancelText?: string}} [opts]
+ * @returns {Promise<boolean>} resolves true if confirmed, false if cancelled
+ */
+function showConfirm(message, opts = {}) {
+    const {
+        title = 'Bestätigung',
+        confirmText = 'Absenden',
+        cancelText = 'Abbrechen'
+    } = opts;
+
+    return new Promise((resolve) => {
+        const overlay = document.createElement('div');
+        overlay.className = 'rts-confirm-overlay';
+
+        const card = document.createElement('div');
+        card.className = 'rts-confirm-card';
+        card.setAttribute('role', 'dialog');
+        card.setAttribute('aria-modal', 'true');
+
+        const header = document.createElement('div');
+        header.className = 'rts-confirm-header';
+        header.textContent = title;
+
+        const body = document.createElement('div');
+        body.className = 'rts-confirm-body';
+        body.textContent = message;
+
+        const footer = document.createElement('div');
+        footer.className = 'rts-confirm-footer';
+
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = 'rts-confirm-btn rts-confirm-btn-cancel';
+        cancelBtn.textContent = cancelText;
+
+        const confirmBtn = document.createElement('button');
+        confirmBtn.type = 'button';
+        confirmBtn.className = 'rts-confirm-btn rts-confirm-btn-confirm';
+        confirmBtn.textContent = confirmText;
+
+        footer.append(cancelBtn, confirmBtn);
+        card.append(header, body, footer);
+        overlay.appendChild(card);
+        document.body.appendChild(overlay);
+        requestAnimationFrame(() => overlay.classList.add('is-visible'));
+
+        const cleanup = (result) => {
+            document.removeEventListener('keydown', onKey);
+            overlay.classList.remove('is-visible');
+            setTimeout(() => overlay.remove(), 300);
+            resolve(result);
+        };
+        const onKey = (event) => {
+            if (event.key === 'Escape') cleanup(false);
+            else if (event.key === 'Enter') cleanup(true);
+        };
+
+        cancelBtn.addEventListener('click', () => cleanup(false));
+        confirmBtn.addEventListener('click', () => cleanup(true));
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay) cleanup(false);
+        });
+        document.addEventListener('keydown', onKey);
+        confirmBtn.focus();
+    });
+}
+
+/**
  * Handles delivery form submission with comprehensive validation
  * @param {Event} event - Submit event
  * @returns {Promise<void>}
  */
 async function handleDeliverySubmit(event) {
     event.preventDefault();
-    
-    // Show confirmation dialog before submitting
-    if (!confirm('Möchten Sie die Transportbestätigung wirklich absenden? Diese Aktion kann nicht rückgängig gemacht werden.')) {
+
+    // Show confirmation dialog before submitting (custom modal, no browser chrome)
+    if (!(await showConfirm('Möchten Sie die Transportbestätigung wirklich absenden? Diese Aktion kann nicht rückgängig gemacht werden.'))) {
         return;
     }
     
