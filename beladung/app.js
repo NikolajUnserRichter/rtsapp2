@@ -164,9 +164,9 @@ function wagonOptions(list, prefill) {
 function createLoadCard(t) {
     const id = sanitizeId(t.orderId);
     const cats = reasonCategories();
-    const prefillCat = t.reasonKategorie || '';
-    const confirmedReason = PAYLOAD.reasons.find(r =>
-        (r.kategorie || '') === prefillCat && (r.dropdown || '') === (t.reasonDropdown || ''));
+    // prefill the reason cascade from the transport's current reason id (rts_reasonshortdelivery)
+    const confirmedReason = PAYLOAD.reasons.find(r => String(r.id) === String(t.reasonIdConfirmed || ''));
+    const prefillCat = confirmedReason ? (confirmedReason.kategorie || '') : '';
     const prefillReasonId = confirmedReason ? confirmedReason.id : '';
     const catOpts = `<option value="">— bitte wählen —</option>` + cats.map(c =>
         `<option value="${escapeHtml(c)}"${c === prefillCat ? ' selected' : ''}>${escapeHtml(c)}</option>`).join('');

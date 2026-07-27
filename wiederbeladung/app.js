@@ -183,10 +183,9 @@ function createReloadCard(t) {
     const id = sanitizeId(t.orderId);
     const fdp = escapeHtml(PAYLOAD.fdpShort || '');
     const cats = reasonCategories();
-    const prefillCat = t.reasonKategorieConfirmed || '';
-    // resolve the confirmed reason id from kategorie + dropdown, for prefill of the criterion select
-    const confirmedReason = PAYLOAD.reasons.find(r =>
-        (r.kategorie || '') === prefillCat && (r.dropdown || '') === (t.reasonDropdownConfirmed || ''));
+    // prefill the reason cascade from the transport's current reason id (rts_reasonshortdelivery)
+    const confirmedReason = PAYLOAD.reasons.find(r => String(r.id) === String(t.reasonIdConfirmed || ''));
+    const prefillCat = confirmedReason ? (confirmedReason.kategorie || '') : '';
     const prefillReasonId = confirmedReason ? confirmedReason.id : '';
 
     const catOpts = `<option value="">— bitte wählen —</option>` + cats.map(c =>
