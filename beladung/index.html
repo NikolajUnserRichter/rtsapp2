@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="BMW RTS – Beladung">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://upload.wikimedia.org data:; connect-src 'self' https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com https://cdn.jsdelivr.net; frame-ancestors 'none'; base-uri 'self'; form-action 'self';">
+    <title>Beladung: Wiederbeladung am Übergabepunkt</title>
+
+    <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    <link rel="dns-prefetch" href="//upload.wikimedia.org">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="container">
+        <main class="login-card" role="main" aria-labelledby="login-heading">
+            <header class="login-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" width="60" height="60" loading="eager" decoding="async" class="login-logo">
+                <h1 id="login-heading">Anmeldung erforderlich</h1>
+                <p>Bitte melden Sie sich an, um die Beladungsdaten zu bearbeiten.</p>
+            </header>
+            <form id="login-form" novalidate aria-labelledby="login-heading">
+                <fieldset class="border-0 p-0">
+                    <legend class="visually-hidden">Anmeldeinformationen</legend>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Benutzername</label>
+                        <input type="text" class="form-control" id="username" name="username" required autocomplete="username" aria-required="true" minlength="2" maxlength="100" placeholder="Ihren Benutzernamen eingeben">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Passwort</label>
+                        <input type="password" class="form-control" id="password" name="password" required autocomplete="current-password" aria-required="true" minlength="4" maxlength="100" placeholder="Ihr Passwort eingeben">
+                    </div>
+                </fieldset>
+                <div id="login-alert" class="mb-3" role="alert" aria-live="assertive" aria-atomic="true"></div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-custom" id="login-btn" aria-label="Anmelden">
+                        <span id="login-btn-text">Anmelden</span>
+                        <span id="login-spinner" class="spinner-border spinner-border-sm hidden" role="status" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- Main Application (hidden until login) -->
+    <div id="main-app" class="container hidden">
+        <article class="main-card" role="main" aria-labelledby="main-heading">
+            <header class="header-section text-center">
+                <h2 id="main-heading">Neue Beladung für Wiederbeladung <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW Logo" width="42" height="42" loading="lazy" decoding="async" class="header-logo"></h2>
+                <p class="lead header-lead-text">
+                  Bitte erfassen Sie als Übergabepunkt die tatsächlichen Beladedaten zu den untenstehenden Transporten.
+                </p>
+            </header>
+            <section id="main-content" class="p-4" aria-labelledby="main-heading" tabindex="-1">
+                <form id="reload-form" novalidate aria-labelledby="main-heading">
+                    <div id="orders-container" role="region" aria-label="Transporte zur Beladung">
+                        <div class="alert alert-info" role="status" aria-live="polite">Lade Transportdaten...</div>
+                    </div>
+                    <div id="alert-container" class="mt-4" role="alert" aria-live="assertive" aria-atomic="true"></div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-custom mt-3" aria-label="Angaben speichern und senden">Angaben speichern &amp; an Logistik senden</button>
+                    </div>
+                </form>
+            </section>
+        </article>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous" defer></script>
+    <script src="app.js" defer></script>
+</body>
+</html>
