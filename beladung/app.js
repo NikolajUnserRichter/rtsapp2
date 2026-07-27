@@ -28,6 +28,50 @@ const WAGON_TYPE_OPTIONS = [
     { value: '914890002', text: 'Offen + Geschlossen' }
 ];
 
+const REASON_SHORT_DELIVERY = [
+    { value: 'None', text: '— Keine Unterlieferung —' },
+    { value: '05', text: '05 Falsche Waggongattung angeliefert' },
+    { value: '06', text: '06 Fehlende Waggons - Schadwaggon' },
+    { value: '07', text: '07 Ausrangierung Schadwaggons' },
+    { value: '08', text: '08 fehlende Lokführerverfügbarkeit' },
+    { value: '09', text: '09 zu wenige Waggons - falsche Planung Bahn-DL' },
+    { value: '10', text: '10 zu spät angelieferte Waggons' },
+    { value: '11', text: '11 Fehlende Lokführerverfügbarkeit' },
+    { value: '12', text: '12 Zugverspätung - Arbeitszeit Ende' },
+    { value: '13', text: '13 Zugverspätung - Sonstiges Bahn DL' },
+    { value: '14', text: '14 Zugverspätung -   Sonstiges' },
+    { value: '15', text: '15 Streik - Bahn Infrastruktur' },
+    { value: '25', text: '25 technische Störungen Bahnhof bzw. Rangierer' },
+    { value: '26', text: '26 technische Störungen auf der Strecke (z.B. Bahnübergang, Stellwerkstörung)' },
+    { value: '27', text: '27 Rangierleistung nicht ausreichend - Rangierdienst unterbesetzt' },
+    { value: '28', text: '28 Rangierleistung nicht ausreichend  - Rangierdienst in Pause' },
+    { value: '29', text: '29 Rangierleistung nicht ausreichend - Lokschaden/ Lokstörung' },
+    { value: '30', text: '30 Zeitplanung Rangierverkehr' },
+    { value: '31', text: '31 Rangierleistung nicht ausreichend (z.B. bei zu viel Rangierung Schadwaggons/Züge gleichzeitig/Lokverfügbarkeit/Lokführer krank, Lokstörrung…)' },
+    { value: '32', text: '32 Stellwerk nicht besetzt' },
+    { value: '33', text: '33 Lokzuführung verspätet' },
+    { value: '34', text: '34 Warten aus Lok - Störung auf der Strecke; Fahren auf Sicht' },
+    { value: '35', text: '35 Warten auf Lok - Infrastruktur überlastet' },
+    { value: '36', text: '36 Warten aus Lok - Sonstiges' },
+    { value: '37', text: '37 Streckensperrung --> keine Umleitung möglich' },
+    { value: '38', text: '38 Baustelle/ Infrastruktur' },
+    { value: '39', text: '39 Blockierung Transportwege (Abgrenzung zur technischen Störrung, z.B. liegengebliebener Zug auf der Strecke)' },
+    { value: '40', text: '40 Umleitung netzbedingt; Personen im Gleis' },
+    { value: '41', text: '41 Infrastruktur (Baustellen, Oberleitungsstörung, Rückstau wg. Überfüllung der Umleitungen)' },
+    { value: '42', text: '42 fehlende Trassenverfügbarkeit' },
+    { value: '43', text: '43 Dispositive Zulaufsteuerung' },
+    { value: '53', text: '53 Fehlende Waggons - falsche Planung Bahn-DL' }
+];
+
+/** Reason dropdown options; prefill by extracting the leading code from the confirmed reason text. */
+function reasonOptions(prefillText) {
+    const code = String(prefillText || '').trim().split(' ')[0] || '';
+    return REASON_SHORT_DELIVERY.map(r => {
+        const sel = r.value === code ? ' selected' : '';
+        return `<option value="${escapeHtml(r.value)}"${sel}>${escapeHtml(r.text)}</option>`;
+    }).join('');
+}
+
 let sessionToken = null;
 
 /** Whole decoded payload: { fdpShort, kw, reasons[], transports[] } */
@@ -165,13 +209,6 @@ function wagonOptions(list, prefill) {
 
 function createLoadCard(t) {
     const id = sanitizeId(t.orderId);
-    const cats = reasonCategories();
-    // prefill the reason cascade from the transport's current reason id (rts_reasonshortdelivery)
-    const confirmedReason = PAYLOAD.reasons.find(r => String(r.id) === String(t.reasonIdConfirmed || ''));
-    const prefillCat = confirmedReason ? (confirmedReason.kategorie || '') : '';
-    const prefillReasonId = confirmedReason ? confirmedReason.id : '';
-    const catOpts = `<option value="">— bitte wählen —</option>` + cats.map(c =>
-        `<option value="${escapeHtml(c)}"${c === prefillCat ? ' selected' : ''}>${escapeHtml(c)}</option>`).join('');
     const noShowTrue = t.noShow === true || t.noShow === 'true';
 
     return `
@@ -228,13 +265,9 @@ function createLoadCard(t) {
               <option value="true"${noShowTrue ? ' selected' : ''}>Ja</option>
             </select>
           </div>
-          <div class="col-md-4">
-            <label for="reason-kategorie-${id}" class="form-label">Ursachenkluster</label>
-            <select class="form-select reason-kategorie" id="reason-kategorie-${id}" data-order-id="${id}">${catOpts}</select>
-          </div>
-          <div class="col-md-4">
-            <label for="reason-criterion-${id}" class="form-label">Minderleistungskriterium</label>
-            <select class="form-select" id="reason-criterion-${id}">${criterionOptionsFor(prefillCat, prefillReasonId)}</select>
+          <div class="col-md-6">
+            <label for="reason-${id}" class="form-label">Ursachenkluster / Minderleistungskriterium</label>
+            <select class="form-select" id="reason-${id}">${reasonOptions(t.reasonTextConfirmed)}</select>
           </div>
         </div>
 
@@ -301,7 +334,6 @@ function loadForm() {
     });
     container.innerHTML = '';
     container.appendChild(fragment);
-    container.addEventListener('change', onKategorieChange);
 }
 
 // ============================================
@@ -410,7 +442,7 @@ async function handleLoadSubmit(event) {
             wagonProfileDelivery: val(`wagon-profile-${id}`),
             wagonTypeDelivery: val(`wagon-type-${id}`),
             noShow: val(`no-show-${id}`) === 'true',
-            reasonId: val(`reason-criterion-${id}`),
+            reasonCode: val(`reason-${id}`),
             loadedComment: (val(`comment-${id}`) || '').substring(0, CONFIG.MAX_COMMENT_LENGTH)
         });
     });
