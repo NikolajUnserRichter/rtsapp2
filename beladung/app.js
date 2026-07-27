@@ -103,9 +103,11 @@ function fetchWithTimeout(url, options = {}, timeout = CONFIG.REQUEST_TIMEOUT) {
 // ============================================
 
 function getPayloadFromUrl() {
-    const encoded = new URLSearchParams(window.location.search).get('data');
+    let encoded = new URLSearchParams(window.location.search).get('data');
     const empty = { fdpShort: '', kw: '', reasons: [], transports: [] };
     if (!encoded) return empty;
+    // URLSearchParams turns base64 '+' into spaces — restore them before decoding.
+    encoded = encoded.replace(/ /g, '+');
     try {
         let jsonString;
         try { jsonString = base64DecodeUnicode(encoded); }
