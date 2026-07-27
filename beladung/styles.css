@@ -471,3 +471,14 @@ textarea.form-control {
     color: #dc2626;
     font-weight: 700;
 }
+
+/* Keep inputs aligned even when labels wrap to two lines */
+.order-card .form-label {
+    min-height: 2.7em;
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 4px;
+}
+.order-card .row > [class*="col-"] { display: flex; flex-direction: column; }
+.order-card .row > [class*="col-"] .form-control,
+.order-card .row > [class*="col-"] .form-select { margin-top: auto; }

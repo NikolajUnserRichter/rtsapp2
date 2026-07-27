@@ -9,6 +9,8 @@ const CONFIG = {
     AUTH_FLOW_URL: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU',
     // F21.R_Lieferung (leer) bestätigen — HTTP write-back (env c06da98d, CSP-allowed).
     ORDER_SUBMIT_URL: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/31/workflows/611c9b8e26eb4655b5d28a0614f261f4/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=muqlB7zKUV3Y8qvHh4FxqtTsIYDAIV__pjDT--cUaj8',
+    // Get-Reasons flow (returns the reason table for the Kategorie->Kriterium cascade).
+    GET_REASONS_URL: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/399f2125490a4ad58c28dc3a0ed9b66e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LjmJb2brJ7KcU5mNuA10hi7S3xCunoz97fzfz2NYQ1k',
     REQUEST_TIMEOUT: 30000,
     MAX_USERNAME_LENGTH: 100,
     MAX_PASSWORD_LENGTH: 100,
@@ -30,48 +32,55 @@ const WAGON_TYPE_OPTIONS = [
     { value: '914890002', text: 'Offen + Geschlossen' }
 ];
 
-const REASON_SHORT_DELIVERY = [
-    { value: 'None', text: '— Keine Unterlieferung —' },
-    { value: '05', text: '05 Falsche Waggongattung angeliefert' },
-    { value: '06', text: '06 Fehlende Waggons - Schadwaggon' },
-    { value: '07', text: '07 Ausrangierung Schadwaggons' },
-    { value: '08', text: '08 fehlende Lokführerverfügbarkeit' },
-    { value: '09', text: '09 zu wenige Waggons - falsche Planung Bahn-DL' },
-    { value: '10', text: '10 zu spät angelieferte Waggons' },
-    { value: '11', text: '11 Fehlende Lokführerverfügbarkeit' },
-    { value: '12', text: '12 Zugverspätung - Arbeitszeit Ende' },
-    { value: '13', text: '13 Zugverspätung - Sonstiges Bahn DL' },
-    { value: '14', text: '14 Zugverspätung -   Sonstiges' },
-    { value: '15', text: '15 Streik - Bahn Infrastruktur' },
-    { value: '25', text: '25 technische Störungen Bahnhof bzw. Rangierer' },
-    { value: '26', text: '26 technische Störungen auf der Strecke (z.B. Bahnübergang, Stellwerkstörung)' },
-    { value: '27', text: '27 Rangierleistung nicht ausreichend - Rangierdienst unterbesetzt' },
-    { value: '28', text: '28 Rangierleistung nicht ausreichend  - Rangierdienst in Pause' },
-    { value: '29', text: '29 Rangierleistung nicht ausreichend - Lokschaden/ Lokstörung' },
-    { value: '30', text: '30 Zeitplanung Rangierverkehr' },
-    { value: '31', text: '31 Rangierleistung nicht ausreichend (z.B. bei zu viel Rangierung Schadwaggons/Züge gleichzeitig/Lokverfügbarkeit/Lokführer krank, Lokstörrung…)' },
-    { value: '32', text: '32 Stellwerk nicht besetzt' },
-    { value: '33', text: '33 Lokzuführung verspätet' },
-    { value: '34', text: '34 Warten aus Lok - Störung auf der Strecke; Fahren auf Sicht' },
-    { value: '35', text: '35 Warten auf Lok - Infrastruktur überlastet' },
-    { value: '36', text: '36 Warten aus Lok - Sonstiges' },
-    { value: '37', text: '37 Streckensperrung --> keine Umleitung möglich' },
-    { value: '38', text: '38 Baustelle/ Infrastruktur' },
-    { value: '39', text: '39 Blockierung Transportwege (Abgrenzung zur technischen Störrung, z.B. liegengebliebener Zug auf der Strecke)' },
-    { value: '40', text: '40 Umleitung netzbedingt; Personen im Gleis' },
-    { value: '41', text: '41 Infrastruktur (Baustellen, Oberleitungsstörung, Rückstau wg. Überfüllung der Umleitungen)' },
-    { value: '42', text: '42 fehlende Trassenverfügbarkeit' },
-    { value: '43', text: '43 Dispositive Zulaufsteuerung' },
-    { value: '53', text: '53 Fehlende Waggons - falsche Planung Bahn-DL' }
-];
+/** Reason table, fetched from the Get-Reasons flow: [{kategorie, kategorieLabel, dropdown, code}] */
+let REASONS = [];
 
-/** Reason dropdown options; prefill by extracting the leading code from the confirmed reason text. */
-function reasonOptions(prefillText) {
-    const code = String(prefillText || '').trim().split(' ')[0] || '';
-    return REASON_SHORT_DELIVERY.map(r => {
-        const sel = r.value === code ? ' selected' : '';
-        return `<option value="${escapeHtml(r.value)}"${sel}>${escapeHtml(r.text)}</option>`;
-    }).join('');
+async function fetchReasons() {
+    try {
+        const resp = await fetchWithTimeout(CONFIG.GET_REASONS_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({})
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            REASONS = (Array.isArray(data) ? data : []).map(r => ({
+                kategorie: r.kategorie,
+                kategorieLabel: r.kategorieLabel || String(r.kategorie || ''),
+                dropdown: r.dropdown || '',
+                code: String(r.dropdown || '').trim().split(' ')[0] || ''
+            }));
+        }
+    } catch (e) { console.error('fetchReasons failed:', e); REASONS = []; }
+}
+
+/** {cat, code} prefill from the transport's confirmed reason text. */
+function reasonPrefill(t) {
+    const code = String(t.reasonTextConfirmed || '').trim().split(' ')[0] || '';
+    const r = REASONS.find(x => x.code === code);
+    return { cat: r ? String(r.kategorie) : '', code };
+}
+
+/** Category dropdown — all categories, unfiltered. */
+function reasonCategoryOptions(prefillCat) {
+    const seen = new Map();
+    REASONS.forEach(r => { const k = String(r.kategorie); if (!seen.has(k)) seen.set(k, r.kategorieLabel); });
+    let opts = '<option value="">— bitte wählen —</option>';
+    seen.forEach((label, val) => {
+        const sel = val === String(prefillCat) ? ' selected' : '';
+        opts += `<option value="${escapeHtml(val)}"${sel}>${escapeHtml(label)}</option>`;
+    });
+    return opts;
+}
+
+/** Criterion dropdown — all reasons in the chosen category (no other filtering). value = code. */
+function reasonCriterionOptions(kategorie, prefillCode) {
+    let opts = '<option value="">— bitte wählen —</option>';
+    REASONS.filter(r => String(r.kategorie) === String(kategorie)).forEach(r => {
+        const sel = r.code === prefillCode ? ' selected' : '';
+        opts += `<option value="${escapeHtml(r.code)}"${sel}>${escapeHtml(r.dropdown)}</option>`;
+    });
+    return opts;
 }
 
 let sessionToken = null;
@@ -300,9 +309,13 @@ function createReloadCard(t) {
               <option value="true">Ja</option>
             </select>
           </div>
-          <div class="col-md-6">
-            <label for="reason-${id}" class="form-label">Ursachenkluster / Minderleistungskriterium</label>
-            <select class="form-select" id="reason-${id}">${reasonOptions(t.reasonTextConfirmed)}</select>
+          <div class="col-md-3">
+            <label for="reason-kategorie-${id}" class="form-label">Ursachenkluster</label>
+            <select class="form-select reason-kategorie" id="reason-kategorie-${id}" data-order-id="${id}">${reasonCategoryOptions(reasonPrefill(t).cat)}</select>
+          </div>
+          <div class="col-md-3">
+            <label for="reason-criterion-${id}" class="form-label">Minderleistungskriterium</label>
+            <select class="form-select" id="reason-criterion-${id}">${reasonCriterionOptions(reasonPrefill(t).cat, reasonPrefill(t).code)}</select>
           </div>
           <div class="col-md-3">
             <label for="incurred-costs-${id}" class="form-label">Entstandene Kosten</label>
@@ -339,7 +352,7 @@ function onKategorieChange(event) {
     if (!sel.classList.contains('reason-kategorie')) return;
     const id = sel.getAttribute('data-order-id');
     const crit = document.getElementById(`reason-criterion-${id}`);
-    if (crit) crit.innerHTML = criterionOptionsFor(sel.value, '');
+    if (crit) crit.innerHTML = reasonCriterionOptions(sel.value, '');
 }
 
 // ============================================
@@ -363,8 +376,9 @@ function showAlert(message, type) {
 // FORM LOAD
 // ============================================
 
-function loadForm() {
+async function loadForm() {
     PAYLOAD = getPayloadFromUrl();
+    await fetchReasons();
     const container = DOM_CACHE.ordersContainer || document.getElementById('orders-container');
     if (!PAYLOAD.transports.length) {
         container.innerHTML = `
@@ -384,6 +398,7 @@ function loadForm() {
     });
     container.innerHTML = '';
     container.appendChild(fragment);
+    container.addEventListener('change', onKategorieChange);
     // cascade: repopulate criterion when kategorie changes (delegated)
 }
 
@@ -515,7 +530,7 @@ async function handleReloadSubmit(event) {
             wagonProfileDelivery: val(`wagon-profile-${id}`),
             wagonTypeDelivery: val(`wagon-type-${id}`),
             noShow: val(`no-show-${id}`) === 'true',
-            reasonCode: val(`reason-${id}`),
+            reasonCode: val(`reason-criterion-${id}`),
             incurredCosts: num(`incurred-costs-${id}`),
             responsibleId: responsibleEl.value,
             deliveredComment: (val(`comment-${id}`) || '').substring(0, CONFIG.MAX_COMMENT_LENGTH)
