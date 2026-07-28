@@ -302,24 +302,26 @@ function createReloadCard(t) {
         <!-- Probleme & Kosten -->
         <h4 class="section-title">Probleme &amp; Kosten</h4>
         <div class="row g-3 mb-2">
-          <div class="col-md-3">
+          <div class="col-md-6">
             <label for="no-show-${id}" class="form-label">No Show</label>
             <select class="form-select" id="no-show-${id}">
               <option value="false" selected>Nein</option>
               <option value="true">Ja</option>
             </select>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-6">
+            <label for="incurred-costs-${id}" class="form-label">Entstandene Kosten</label>
+            <input type="number" min="0" step="0.01" class="form-control" id="incurred-costs-${id}" value="">
+          </div>
+        </div>
+        <div class="row g-3 mb-2">
+          <div class="col-md-6">
             <label for="reason-kategorie-${id}" class="form-label">Ursachenkluster</label>
             <select class="form-select reason-kategorie" id="reason-kategorie-${id}" data-order-id="${id}">${reasonCategoryOptions(reasonPrefill(t).cat)}</select>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-6">
             <label for="reason-criterion-${id}" class="form-label">Minderleistungskriterium</label>
             <select class="form-select" id="reason-criterion-${id}">${reasonCriterionOptions(reasonPrefill(t).cat, reasonPrefill(t).code)}</select>
-          </div>
-          <div class="col-md-3">
-            <label for="incurred-costs-${id}" class="form-label">Entstandene Kosten</label>
-            <input type="number" min="0" step="0.01" class="form-control" id="incurred-costs-${id}" value="">
           </div>
         </div>
 
