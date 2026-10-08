@@ -163,8 +163,12 @@ function getPayloadFromUrl() {
     let encoded = new URLSearchParams(window.location.search).get('data');
     const empty = { fdpShort: '', kw: '', reasons: [], responsibles: [], transports: [] };
     if (!encoded) return empty;
-    // URLSearchParams turns base64 '+' into spaces — restore them before decoding.
-    encoded = encoded.replace(/ /g, '+');
+    // URLSearchParams turns base64 '+' into spaces — restore them, accept URL-safe base64
+    // (- and _) and missing padding. Only for base64-looking values, not for plain JSON.
+    if (!/[{\[%]/.test(encoded)) {
+        encoded = encoded.trim().replace(/ /g, '+').replace(/-/g, '+').replace(/_/g, '/');
+        while (encoded.length % 4 !== 0) encoded += '=';
+    }
     try {
         let jsonString;
         try { jsonString = base64DecodeUnicode(encoded); }

@@ -223,10 +223,16 @@ const twoHourSlotOptionsHtml = generate2HourSlots();
  */
 function getOrdersFromUrl() {
     const params = new URLSearchParams(window.location.search);
-    const encodedData = params.get('data');
+    let encodedData = params.get('data');
     
     try {
         if (!encodedData) return [];
+        // URLSearchParams turns base64 '+' into spaces — restore them, accept URL-safe base64
+        // (- and _) and missing padding. Only for base64-looking values, not for plain JSON.
+        if (!/[{\[%]/.test(encodedData)) {
+            encodedData = encodedData.trim().replace(/ /g, '+').replace(/-/g, '+').replace(/_/g, '/');
+            while (encodedData.length % 4 !== 0) encodedData += '=';
+        }
         
         let jsonString;
         try {
