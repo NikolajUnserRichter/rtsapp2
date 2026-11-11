@@ -85,5 +85,21 @@ for (const p of pages) {
         if (!ok) failed++;
     }
 }
-console.log(failed ? `\n${failed} test(s) failed` : '\nall decoding tests passed');
+
+// Endpoint per environment: &env=28ade5d3 (PROD) -> PROD flows, anything else -> DEV flows
+for (const file of ['app.js', 'beladung/app.js', 'wiederbeladung/app.js']) {
+    for (const [search, host] of [['?data=x', 'c06da98d'], ['?data=x&env=c06da98d', 'c06da98d'], ['?data=x&env=28ade5d3', '28ade5d3']]) {
+        let ok = false;
+        try {
+            const ctx = sandbox(search);
+            vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8') + '\n;this.__C = CONFIG;', ctx);
+            const cfg = ctx.__C;
+            const urls = Object.entries(cfg).filter(([k]) => /_URL$/.test(k)).map(([, v]) => v);
+            ok = urls.length >= 2 && urls.every(u => u.startsWith('https://' + host));
+        } catch (e) { /* ok stays false */ }
+        console.log(`${ok ? 'PASS' : 'FAIL'}  endpoints  ${file.padEnd(22)} ${search} -> ${host}`);
+        if (!ok) failed++;
+    }
+}
+console.log(failed ? `\n${failed} test(s) failed` : '\nall tests passed');
 process.exit(failed ? 1 : 0);

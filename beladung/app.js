@@ -4,12 +4,28 @@
 // CONFIGURATION & CONSTANTS
 // ============================================
 
+// Flow endpoints per environment. The sending flows (F10/F21/F22/F41) add &env=<first 8 characters of
+// the environment id> to the link. PROD app environment = 28ade5d3; no or unknown env = DEV, so older links keep working.
+const RTS_ENV = /^28ade5d3/i.test(new URLSearchParams(window.location.search).get('env') || '') ? 'prod' : 'dev';
+const ENDPOINTS = {
+    dev: {
+        auth: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/17/workflows/05f3abfc061845e5a32f218dae03a4c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QbpMBZDp4Mo6HqUS6tXGIwNeZW41ikD0tOeDlyeqU3E',
+        submit: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/2da33f7d32354e209c8ca5da3f36ad9f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2GptK-F0ZjIp22kh2gaieNxkN6Zj-bFVccdxtwCOsnE',
+        reasons: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/399f2125490a4ad58c28dc3a0ed9b66e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LjmJb2brJ7KcU5mNuA10hi7S3xCunoz97fzfz2NYQ1k',
+    },
+    prod: {
+        auth: 'https://28ade5d300a5e6ea8868bd488be7b8.49.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/08/workflows/35c2caca7ded4d9c9de850a53cc6b18c/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yQXA9VOaBvgB7Brx6BpTCdPO7f9uTXl2Ye2PCQaUA5A',
+        submit: 'https://28ade5d300a5e6ea8868bd488be7b8.49.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/10/workflows/52ba7f70aeea4a0cadf8cc7a42c886a9/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=JrJnsVwkJOqtD0g7VXpRIPHsfkBiltDfoL3gFDqo9FY',
+        reasons: 'https://28ade5d300a5e6ea8868bd488be7b8.49.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/25/workflows/186260ce2b78432ba77d763d2430735e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=5f2bQYqMhi2JP_WcTtVRIPL1DOBIR7SNIu5UlfESYZk',
+    },
+}[RTS_ENV];
+
 const CONFIG = {
-    AUTH_FLOW_URL: 'https://e157ee54d75be7b59e64b3c2c12166.51.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/3f3444f8c3514fe8873204c368389636/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=SwlTj3if5ZKKomFHRBl7RZA-kmS3-X4oMm7NkNRVYFU',
-    // F22.R_Beladung bestätigen — HTTP write-back (env c06da98d, CSP-allowed).
-    ORDER_SUBMIT_URL: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/2da33f7d32354e209c8ca5da3f36ad9f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2GptK-F0ZjIp22kh2gaieNxkN6Zj-bFVccdxtwCOsnE',
+    AUTH_FLOW_URL: ENDPOINTS.auth,
+    // F22.R_Beladung bestätigen — HTTP write-back (endpoint per environment, see ENDPOINTS).
+    ORDER_SUBMIT_URL: ENDPOINTS.submit,
     // Get-Reasons flow (returns the reason table for the Kategorie->Kriterium cascade).
-    GET_REASONS_URL: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/399f2125490a4ad58c28dc3a0ed9b66e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LjmJb2brJ7KcU5mNuA10hi7S3xCunoz97fzfz2NYQ1k',
+    GET_REASONS_URL: ENDPOINTS.reasons,
     REQUEST_TIMEOUT: 30000,
     MAX_USERNAME_LENGTH: 100,
     MAX_PASSWORD_LENGTH: 100,
