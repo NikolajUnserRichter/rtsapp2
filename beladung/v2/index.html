@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://upload.wikimedia.org data:; connect-src 'self' https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com https://28ade5d300a5e6ea8868bd488be7b8.49.environment.api.powerplatform.com; base-uri 'self'; form-action 'self';">
+<title>RTS Beladung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="gate">
+
+<div class="gatewrap" id="loginScreen">
+  <form class="gatecard" id="loginForm" novalidate>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW" width="56" height="56">
+    <h1>RTS · Beladung</h1>
+    <p>Bitte melden Sie sich an, um die Transporte zu bestätigen.</p>
+    <label for="username">Benutzername</label><input id="username" name="username" type="text" autocomplete="username" maxlength="100" required>
+    <label for="password">Passwort</label><input id="password" name="password" type="password" autocomplete="current-password" maxlength="100" required>
+    <div class="gatemsg" id="loginMsg" role="alert" aria-live="polite"></div>
+    <button class="btn primary" id="loginBtn" type="submit">Anmelden</button>
+  </form>
+</div>
+<div class="gatewrap" id="loading" hidden><div class="gatecard"><p>Transporte werden geladen …</p></div></div>
+<div class="gatewrap" id="noData" hidden><div class="gatecard"><h1>Keine Transportdaten</h1><p>In diesem Link wurden keine Transporte übergeben. Bitte den Link aus der E-Mail vollständig öffnen oder die BMW Logistik informieren.</p></div></div>
+<dialog id="askDlg"><p id="askText"></p><div class="askacts"><button class="btn" id="askNo" type="button"></button><button class="btn primary" id="askOk" type="button"></button></div></dialog>
+<header class="top">
+  <div class="in">
+    <div class="brand"><img class="logo" src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" alt="BMW" width="36" height="36"><div>RTS · <span data-i="title">Beladung</span><small data-i="brandsub">Rail Transport System · BMW Group</small></div></div>
+    <div class="sp"></div>
+    <div class="ctrls"><div class="lang" role="group" aria-label="Sprache / Language"><button id="lDE" aria-pressed="true">DE</button><button id="lEN" aria-pressed="false">EN</button></div>
+    <button class="themebtn" id="themeBtn" aria-label="Hell/Dunkel · Light/Dark"><span id="themeIco" aria-hidden="true"></span><span id="themeTxt">Dunkel</span></button></div>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="sav big" aria-hidden="true" id="heroIni"></div>
+    <div class="htitle"><div class="eyebrow" data-i="dpEyebrow">Übergabepunkt</div>
+      <h1><span id="heroName"></span> <span class="code" title="Übergabepunkt-Code" id="heroCode" hidden></span></h1>
+      <div class="herosub" data-i="lead">Wiederbeladung am Übergabepunkt – bitte je Transport bestätigen, wie viele Wagen beladen wurden.</div>
+    </div>
+    <div class="facts2">
+      <div class="fact kw"><span class="fl" data-i="fWeek">Kalenderwoche</span><b data-i="fWeekV">KW 46</b><span class="fs" data-i="fWeekR">09.–15.11.2026</span></div>
+      <div class="fact" style="display:none"><span class="fl" data-i="fNotified">Benachrichtigung erhalten</span><b data-i="fNotifiedV">Mo 09.11.</b><span class="fs" data-i="fNotifiedT">06:30 Uhr</span></div>
+      <div class="fact"><span class="fl" data-i="fOpen">Offen</span><b class="num" id="openCnt">0</b><span class="fs" id="openSub"></span></div>
+    </div>
+  </div>
+
+  <div class="lockbar" id="lockBar" role="status" hidden></div>
+  <section class="summary" id="summary" aria-label="Übersicht"></section>
+
+  <div class="filterrow">
+    <label class="search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5"/></svg>
+      <input id="q" type="search" placeholder="" aria-label="Suchen"></label>
+    <label data-i="fDay">Tag</label><div class="chips" id="dayChips"></div>
+    <label style="margin-left:6px" data-i="fDest" for="fDest">Senke</label><select class="sel" id="fDest"></select>
+    <label data-i="fSupp" for="fSupp">Dienstleister</label><select class="sel" id="fSupp"></select>
+    <button class="link" id="resetF" data-i="reset">Filter zurücksetzen</button>
+  </div>
+
+  <div id="tableView"></div>
+</main>
+
+<div class="bottom">
+  <div class="in">
+    <div class="info" id="bInfo"></div>
+    <div class="saved" id="savedNote"></div>
+    <div class="sp"></div>
+    <button class="btn primary" id="sendShown" disabled></button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<datalist id="qtimes"></datalist>
+
+<script src="config.js"></script>
+<script src="../../shared/v2boot.js"></script>
+<script src="mask.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

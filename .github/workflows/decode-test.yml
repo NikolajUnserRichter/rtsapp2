@@ -9,3 +9,4 @@ jobs:
         with:
           node-version: 20
       - run: node tests/decode.test.js
+      - run: node tests/v2.test.js
