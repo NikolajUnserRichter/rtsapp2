@@ -177,6 +177,10 @@ function getPayloadFromUrl() {
     if (!encoded) return empty;
     // URLSearchParams turns base64 '+' into spaces — restore them, accept URL-safe base64
     // (- and _) and missing padding. Only for base64-looking values, not for plain JSON.
+    // The F21/F22 flows URL-encode the value twice, so one layer is still left here: undo it (at most 3 layers).
+    for (let i = 0; i < 3 && /%[0-9A-Fa-f]{2}/.test(encoded) && !/^\s*[{\[]/.test(encoded); i++) {
+        try { encoded = decodeURIComponent(encoded); } catch { break; }
+    }
     if (!/[{\[%]/.test(encoded)) {
         encoded = encoded.trim().replace(/ /g, '+').replace(/-/g, '+').replace(/_/g, '/');
         while (encoded.length % 4 !== 0) encoded += '=';

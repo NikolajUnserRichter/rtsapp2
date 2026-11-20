@@ -53,6 +53,7 @@ function variants(b64) {
     return {
         'raw link, + arrives as space': '?data=' + b64,
         'URL-encoded link': '?data=' + encodeURIComponent(b64),
+        'URL-encoded twice (F21/F22 flows)': '?data=' + encodeURIComponent(encodeURIComponent(b64)),
         'URL-safe, no padding': '?data=' + b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
     };
 }
