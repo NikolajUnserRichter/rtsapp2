@@ -8,10 +8,13 @@ const RtsV2Boot = (function () {
     const $ = s => document.querySelector(s);
     const TIMEOUT = 30000;
 
-    /** ?data= -> parsed JSON (object or array) or null. Accepts base64 with '+' turned into spaces, URL-safe
-     *  base64, missing padding, a value that is still URL-encoded (the F21/F22 flows encode twice) and plain JSON. */
-    function decodeLink(search) {
-        let v = new URLSearchParams(search).get('data');
+    /** ?data= or #data= -> parsed JSON (object or array) or null. New links put the data after '#'
+     *  (…/v2/?env=…#data=…): that part is never sent to the server, so long links do not hit GitHub Pages'
+     *  request size limit (400). Accepts base64 with '+' turned into spaces, URL-safe base64, missing padding,
+     *  a value that is still URL-encoded (the F21/F22 flows encode twice) and plain JSON. */
+    function decodeLink(search, hash) {
+        if (hash === undefined) hash = typeof window !== 'undefined' && window.location ? window.location.hash : '';
+        let v = new URLSearchParams(search).get('data') || new URLSearchParams(String(hash || '').replace(/^#/, '')).get('data');
         if (!v) return null;
         for (let i = 0; i < 3 && /%[0-9A-Fa-f]{2}/.test(v) && !/^\s*[{\[]/.test(v); i++) {
             try { v = decodeURIComponent(v); } catch (e) { break; }

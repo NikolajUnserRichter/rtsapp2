@@ -37,6 +37,12 @@ for (const [name, search] of Object.entries(variants)) eq('link: ' + name, B.dec
 const arr = [{ orderId: 'WP-1', Destination: 'Zeebrügge' }];
 eq('link: array payload (F41)', B.decodeLink('?data=' + encodeURIComponent(Buffer.from(JSON.stringify(arr), 'utf8').toString('base64'))), arr);
 eq('link: no data', B.decodeLink('?env=c06da98d'), null);
+// data after '#' (new links: ?env=…#data=…) – never sent to the server, so long links do not hit the 400 size limit
+for (const [name, search] of Object.entries(variants)) eq('link after #: ' + name, B.decodeLink('?env=c06da98d', '#' + search.slice(1)), o);
+eq('link: ?data= wins over #data=', B.decodeLink('?data=' + encodeURIComponent(b64), '#data=xxx'), o);
+const big = Array.from({ length: 40 }, (_, i) => ({ orderId: 'WP-' + (3000 + i), Departure: 'WERK DINGOLFING PLATTLING', Destination: 'ZEEBRUGGE TERMINAL', wagons: 24, confirmedTransportDate: '30.11.2026', wagonProfile: 'G1', wagonType: 'Offen' }));
+const bigHash = '#data=' + encodeURIComponent(encodeURIComponent(Buffer.from(JSON.stringify(big), 'utf8').toString('base64')));
+eq('link: 40 transports after #, encoded twice (> 8 KB) are all read', [bigHash.length > 8192, (B.decodeLink('?env=28ade5d3', bigHash) || []).length], [true, 40]);
 eq('link: rubbish', B.decodeLink('?data=%%%not-base64%%%'), null);
 
 eq('dates', [B.iso('2026-11-16T00:00:00Z'), B.iso('16.11.2026'), B.iso('7.1.2027'), B.iso(''), B.iso(null), B.iso('x')], ['2026-11-16', '2026-11-16', '2027-01-07', '', '', '']);
