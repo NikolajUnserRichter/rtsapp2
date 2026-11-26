@@ -11,6 +11,7 @@ const ENDPOINTS = {
     dev: {
         auth: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/17/workflows/05f3abfc061845e5a32f218dae03a4c2/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=QbpMBZDp4Mo6HqUS6tXGIwNeZW41ikD0tOeDlyeqU3E',
         submit: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/18/workflows/2da33f7d32354e209c8ca5da3f36ad9f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2GptK-F0ZjIp22kh2gaieNxkN6Zj-bFVccdxtwCOsnE',
+        statusRead: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/27/workflows/76b4344f0985420994f7e65ff4f8ba82/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=vxQumfcl-Sn83NESeIZvdkUpSoaqYj-XtSdviTZKdXw',
         reasons: 'https://c06da98d80beeed0b9dfc8dfbc6001.57.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/399f2125490a4ad58c28dc3a0ed9b66e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LjmJb2brJ7KcU5mNuA10hi7S3xCunoz97fzfz2NYQ1k',
     },
     prod: {
